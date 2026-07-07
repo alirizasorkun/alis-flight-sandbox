@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,8 +194,9 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
 #crash-banner{position:absolute;top:34%;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}
 #crash-banner .big{font:900 54px var(--sans);letter-spacing:4px;color:#ff5c5c;text-shadow:0 6px 30px rgba(255,40,40,.4)}
 #crash-banner .sub{font:700 13px var(--mono);letter-spacing:2px;color:#ffd9d9;margin-top:8px}
-#flt-msg{position:absolute;top:11%;left:50%;transform:translateX(-50%);font:800 15px var(--mono);
-  letter-spacing:1px;color:#ffe9b0;text-shadow:0 0 8px rgba(255,200,80,.4);text-align:center}
+#flt-msg{position:absolute;top:192px;left:50%;transform:translateX(-50%);font:800 15px var(--mono);
+  letter-spacing:1px;color:#ffe9b0;text-shadow:0 0 8px rgba(255,200,80,.4);text-align:center;
+  max-width:92vw}
 #flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:60}
 
 /* ---------- big map ---------- */
@@ -232,7 +233,7 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
 <body>
 <canvas id="gl"></canvas>
 
-<div id="boot"><div class="spin"></div>LOADING ENGINE…</div>
+<div id="boot"><div class="spin"></div>ENGINE WIRD GELADEN…</div>
 
 <div id="ui">
 
@@ -241,13 +242,13 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
     <div class="veil"></div>
     <div class="card">
       <div class="game-title">Ali's <em>Flight</em><br>Sandbox</div>
-      <div class="game-sub">Build it · Fly it · Break it</div>
+      <div class="game-sub">Bauen · Fliegen · Zerlegen</div>
       <div class="title-stripe"></div>
-      <button class="btn primary" id="mm-new">New Airplane</button>
-      <button class="btn" id="mm-load">Load Airplane</button>
-      <button class="btn" id="mm-settings">Settings</button>
-      <button class="btn" id="mm-quit">Quit</button>
-      <div class="menu-foot"><span>v1.0 · three.js</span><span>desktop · chrome / firefox</span></div>
+      <button class="btn primary" id="mm-new">Neues Flugzeug</button>
+      <button class="btn" id="mm-load">Flugzeug laden</button>
+      <button class="btn" id="mm-settings">Einstellungen</button>
+      <button class="btn" id="mm-quit">Beenden</button>
+      <div class="menu-foot"><span>v1.0 · three.js</span><span>Desktop · Chrome / Firefox</span></div>
     </div>
   </div>
 
@@ -255,24 +256,24 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
   <div id="settings" class="screen hidden">
     <div class="veil"></div>
     <div class="card">
-      <div class="game-title" style="font-size:30px">Settings</div>
+      <div class="game-title" style="font-size:30px">Einstellungen</div>
       <div class="title-stripe"></div>
-      <div class="set-row"><label>Master volume <span id="v-master">80%</span></label>
+      <div class="set-row"><label>Gesamtlautstärke <span id="v-master">80%</span></label>
         <input type="range" id="set-master" min="0" max="100" value="80"></div>
-      <div class="set-row"><label>Engine volume <span id="v-engine">80%</span></label>
+      <div class="set-row"><label>Triebwerk-Lautstärke <span id="v-engine">80%</span></label>
         <input type="range" id="set-engine" min="0" max="100" value="80"></div>
-      <div class="set-row"><label>Wind volume <span id="v-wind">70%</span></label>
+      <div class="set-row"><label>Wind-Lautstärke <span id="v-wind">70%</span></label>
         <input type="range" id="set-wind" min="0" max="100" value="70"></div>
-      <div class="set-row"><label>Weapon volume <span id="v-weapon">85%</span></label>
+      <div class="set-row"><label>Waffen-Lautstärke <span id="v-weapon">85%</span></label>
         <input type="range" id="set-weapon" min="0" max="100" value="85"></div>
-      <div class="set-row"><label>Graphics quality</label>
+      <div class="set-row"><label>Grafikqualität</label>
         <select id="set-gfx">
-          <option value="low">Low — fastest</option>
-          <option value="med" selected>Medium — balanced</option>
-          <option value="high">High — full shadows &amp; scenery</option>
+          <option value="low">Niedrig — am schnellsten</option>
+          <option value="med" selected>Mittel — ausgewogen</option>
+          <option value="high">Hoch — volle Schatten &amp; Landschaft</option>
         </select></div>
       <div class="divider"></div>
-      <button class="btn" id="set-back">Back</button>
+      <button class="btn" id="set-back">Zurück</button>
     </div>
   </div>
 
@@ -280,58 +281,58 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
   <div id="editor-ui" class="hidden">
     <div class="ed-panel" id="ed-left">
       <div class="head">
-        <div class="t">Parts</div>
-        <div id="ed-count">Placed <b>0</b> / 500</div>
+        <div class="t">Teile</div>
+        <div id="ed-count">Platziert <b>0</b> / 500</div>
       </div>
       <div id="ed-palette"></div>
     </div>
 
     <div class="ed-panel" id="ed-toolbar">
-      <button class="tbtn" id="ed-com" title="Toggle center-of-mass indicator">◉ CoM</button>
-      <button class="tbtn" id="ed-sym" title="Mirror parts across the centerline (S)">⧉ Symmetry</button>
-      <button class="tbtn" id="ed-undo" title="Undo (Ctrl+Z)">↩ Undo</button>
-      <button class="tbtn" id="ed-clear">✕ Clear</button>
-      <button class="tbtn fly" id="ed-fly" title="Spawn on the runway">▶ Test Flight</button>
+      <button class="tbtn" id="ed-com" title="Schwerpunkt-Anzeige umschalten">◉ Schwerpunkt</button>
+      <button class="tbtn" id="ed-sym" title="Teile an der Mittelachse spiegeln (S)">⧉ Symmetrie</button>
+      <button class="tbtn" id="ed-undo" title="Rückgängig (Strg+Z)">↩ Rückgängig</button>
+      <button class="tbtn" id="ed-clear">✕ Leeren</button>
+      <button class="tbtn fly" id="ed-fly" title="Auf der Landebahn starten">▶ Testflug</button>
     </div>
 
     <div class="ed-panel" id="ed-right">
       <div class="body">
-        <input type="text" id="ed-name" value="Untitled Craft" maxlength="32" spellcheck="false">
-        <h3 class="sec">Craft report</h3>
+        <input type="text" id="ed-name" value="Unbenanntes Flugzeug" maxlength="32" spellcheck="false">
+        <h3 class="sec">Flugzeugbericht</h3>
         <div id="craft-stats"></div>
-        <h3 class="sec">Design</h3>
+        <h3 class="sec">Entwurf</h3>
         <div class="row">
-          <button class="btn small inline grow" id="ed-save">Save</button>
-          <button class="btn small inline grow" id="ed-loadbtn">Load</button>
+          <button class="btn small inline grow" id="ed-save">Speichern</button>
+          <button class="btn small inline grow" id="ed-loadbtn">Laden</button>
         </div>
         <div class="row">
-          <button class="btn small inline grow" id="ed-export">Export .json</button>
-          <button class="btn small inline grow" id="ed-importbtn">Import</button>
+          <button class="btn small inline grow" id="ed-export">.json exportieren</button>
+          <button class="btn small inline grow" id="ed-importbtn">Importieren</button>
           <input type="file" id="ed-import" accept=".json,application/json" class="hidden">
         </div>
-        <button class="btn small" id="ed-menu">Main Menu</button>
+        <button class="btn small" id="ed-menu">Hauptmenü</button>
       </div>
       <div id="insp">
-        <div class="row"><div class="grow"><div class="pname" id="i-name">Part</div>
+        <div class="row"><div class="grow"><div class="pname" id="i-name">Teil</div>
           <div class="pmass" id="i-mass"></div></div>
-          <input type="color" id="i-color" value="#ff8c2a" title="Part color"></div>
+          <input type="color" id="i-color" value="#ff8c2a" title="Teilfarbe"></div>
         <div class="sw-wrap" id="i-swatches"></div>
         <div class="vec-row"><span class="lbl">POS</span>
           <input type="number" id="i-px" step="0.25"><input type="number" id="i-py" step="0.25"><input type="number" id="i-pz" step="0.25"></div>
-        <div class="vec-row"><span class="lbl">ROT°</span>
+        <div class="vec-row"><span class="lbl">DREH°</span>
           <input type="number" id="i-rx" step="5"><input type="number" id="i-ry" step="5"><input type="number" id="i-rz" step="5"></div>
-        <div class="vec-row"><span class="lbl">SCALE</span>
+        <div class="vec-row"><span class="lbl">SKAL.</span>
           <input type="number" id="i-sx" step="0.1" min="0.2"><input type="number" id="i-sy" step="0.1" min="0.2"><input type="number" id="i-sz" step="0.1" min="0.2"></div>
         <div class="row" style="margin-top:8px">
-          <button class="mini-btn grow" id="i-dup">Duplicate</button>
-          <button class="mini-btn del grow" id="i-del">Delete</button>
+          <button class="mini-btn grow" id="i-dup">Duplizieren</button>
+          <button class="mini-btn del grow" id="i-del">Löschen</button>
         </div>
       </div>
     </div>
 
-    <div id="ed-hint"><span class="kbd">LMB</span> place / select · <span class="kbd">drag</span> orbit ·
-      <span class="kbd">RMB</span> pan · <span class="kbd">X</span><span class="kbd">Y</span><span class="kbd">Z</span>+drag rotate part ·
-      <span class="kbd">S</span> symmetry · <span class="kbd">Del</span> remove · <span class="kbd">Esc</span> deselect</div>
+    <div id="ed-hint"><span class="kbd">LMT</span> platzieren / auswählen · <span class="kbd">ziehen</span> Kamera drehen ·
+      <span class="kbd">RMT</span> verschieben · <span class="kbd">X</span><span class="kbd">Y</span><span class="kbd">Z</span>+ziehen Teil drehen ·
+      <span class="kbd">S</span> Symmetrie · <span class="kbd">Entf</span> entfernen · <span class="kbd">Esc</span> abwählen</div>
   </div>
 
   <!-- ===================== FLIGHT HUD ===================== -->
@@ -339,51 +340,51 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
     <div id="hud-top">
       <div class="hud-box hud-cell"><div class="v" id="hud-spd">0</div><div class="l">KM/H</div></div>
       <div class="hud-box" id="horizon-wrap"><canvas id="horizon" width="150" height="150"></canvas></div>
-      <div class="hud-box hud-cell"><div class="v" id="hud-alt">0</div><div class="l">ALT · M</div></div>
-      <div class="hud-box hud-cell"><div class="v" id="hud-hdg">000</div><div class="l">HDG</div></div>
+      <div class="hud-box hud-cell"><div class="v" id="hud-alt">0</div><div class="l">HÖHE · M</div></div>
+      <div class="hud-box hud-cell"><div class="v" id="hud-hdg">000</div><div class="l">KURS</div></div>
     </div>
     <div class="hud-box" id="minimap-wrap"><canvas id="minimap" width="176" height="176"></canvas>
-      <div id="minimap-lbl">MINIMAP · M FOR FULL</div></div>
+      <div id="minimap-lbl">MINIKARTE · M FÜR VOLLBILD</div></div>
     <div class="hud-box" id="hud-bl">
-      <div class="hud-line"><span class="k">ENGINES</span><span id="hud-eng">OFF</span></div>
-      <div class="hud-line"><span class="k">THROTTLE</span><span id="hud-thrv">0%</span></div>
+      <div class="hud-line"><span class="k">TRIEBWERKE</span><span id="hud-eng">AUS</span></div>
+      <div class="hud-line"><span class="k">SCHUB</span><span id="hud-thrv">0%</span></div>
       <div class="bar"><i id="hud-thr"></i></div>
-      <div class="hud-line"><span class="k">BATTERY</span><span id="hud-batv">100%</span></div>
+      <div class="hud-line"><span class="k">BATTERIE</span><span id="hud-batv">100%</span></div>
       <div class="bar" id="hud-batbar"><i id="hud-bat"></i></div>
-      <div class="hud-line"><span class="k">GEAR</span><span id="hud-gear">DOWN</span></div>
+      <div class="hud-line"><span class="k">FAHRWERK</span><span id="hud-gear">UNTEN</span></div>
       <div id="hud-coords">X +0 · Y +0 · Z +0</div>
     </div>
     <div class="hud-box" id="hud-br">
-      <div id="wpn-name">NO WEAPONS</div>
+      <div id="wpn-name">KEINE WAFFEN</div>
       <div id="wpn-ammo">—</div>
-      <div id="wpn-hint">F FIRE · TAB CYCLE</div>
+      <div id="wpn-hint">F FEUER · TAB WECHSELN</div>
     </div>
-    <div id="stall-warn" class="hidden">STALL</div>
+    <div id="stall-warn" class="hidden">ABRISS</div>
     <div id="flt-msg" class="hidden"></div>
-    <div id="crash-banner" class="hidden"><div class="big">CRASHED</div>
-      <div class="sub">PRESS ESC — REPLAY · RESPAWN · EDITOR</div></div>
+    <div id="crash-banner" class="hidden"><div class="big">ABGESTÜRZT</div>
+      <div class="sub">ESC DRÜCKEN — WIEDERHOLUNG · NEUSTART · EDITOR</div></div>
   </div>
   <div id="flash"></div>
 
   <!-- ===================== BIG MAP ===================== -->
   <div id="bigmap" class="hidden">
     <canvas id="bigmap-cv" width="760" height="760"></canvas>
-    <div id="bigmap-hint">M / ESC — CLOSE MAP</div>
+    <div id="bigmap-hint">M / ESC — KARTE SCHLIESSEN</div>
   </div>
 
   <!-- ===================== PAUSE MENU ===================== -->
   <div id="pause" class="screen hidden">
     <div class="veil"></div>
     <div class="card">
-      <div class="game-title" style="font-size:30px" id="pause-title">Paused</div>
+      <div class="game-title" style="font-size:30px" id="pause-title">Pausiert</div>
       <div class="title-stripe"></div>
-      <button class="btn primary" id="p-resume">Resume</button>
-      <button class="btn" id="p-replay">Watch Replay</button>
-      <button class="btn" id="p-respawn">Respawn on Runway</button>
-      <button class="btn" id="p-editor">Return to Editor</button>
-      <button class="btn" id="p-controls">Controls</button>
-      <button class="btn" id="p-settings">Settings</button>
-      <button class="btn" id="p-menu">Main Menu</button>
+      <button class="btn primary" id="p-resume">Fortsetzen</button>
+      <button class="btn" id="p-replay">Wiederholung ansehen</button>
+      <button class="btn" id="p-respawn">Auf Landebahn neu starten</button>
+      <button class="btn" id="p-editor">Zurück zum Editor</button>
+      <button class="btn" id="p-controls">Steuerung</button>
+      <button class="btn" id="p-settings">Einstellungen</button>
+      <button class="btn" id="p-menu">Hauptmenü</button>
     </div>
   </div>
 
@@ -391,51 +392,51 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
   <div id="controls" class="screen hidden">
     <div class="veil"></div>
     <div class="card wide">
-      <div class="game-title" style="font-size:30px">Controls</div>
+      <div class="game-title" style="font-size:30px">Steuerung</div>
       <div class="title-stripe"></div>
       <table id="ctl-table"><tbody id="ctl-body"></tbody></table>
       <div class="divider"></div>
-      <button class="btn" id="ctl-back">Back</button>
+      <button class="btn" id="ctl-back">Zurück</button>
     </div>
   </div>
 
   <!-- ===================== REPLAY UI ===================== -->
   <div id="replay-ui" class="ed-panel hidden">
-    <div id="rp-tag">● FLIGHT REPLAY</div>
+    <div id="rp-tag">● FLUGWIEDERHOLUNG</div>
     <div id="rp-row1">
-      <button class="rp-btn" id="rp-restart" title="Restart">⏮</button>
-      <button class="rp-btn" id="rp-back" title="Rewind 5s">«</button>
-      <button class="rp-btn" id="rp-play" title="Play / pause">⏸</button>
-      <button class="rp-btn" id="rp-s05" title="Slow motion">.5×</button>
+      <button class="rp-btn" id="rp-restart" title="Neustart">⏮</button>
+      <button class="rp-btn" id="rp-back" title="5s zurückspulen">«</button>
+      <button class="rp-btn" id="rp-play" title="Wiedergabe / Pause">⏸</button>
+      <button class="rp-btn" id="rp-s05" title="Zeitlupe">.5×</button>
       <button class="rp-btn on" id="rp-s1">1×</button>
       <button class="rp-btn" id="rp-s2">2×</button>
       <span class="grow"></span>
       <span id="rp-time">0.0 / 0.0s</span>
-      <button class="rp-btn" id="rp-exit" title="Exit replay" style="width:auto;padding:0 14px">EXIT</button>
+      <button class="rp-btn" id="rp-exit" title="Wiederholung verlassen" style="width:auto;padding:0 14px">SCHLIESSEN</button>
     </div>
     <input type="range" id="rp-slider" min="0" max="1000" value="0">
   </div>
 
   <!-- ===================== SAVE DIALOG ===================== -->
   <div id="dlg-save" class="modal hidden"><div class="card">
-    <div class="game-title" style="font-size:24px">Save design</div>
+    <div class="game-title" style="font-size:24px">Entwurf speichern</div>
     <div class="title-stripe"></div>
-    <input type="text" id="save-name" maxlength="32" placeholder="Craft name" spellcheck="false">
+    <input type="text" id="save-name" maxlength="32" placeholder="Flugzeugname" spellcheck="false">
     <div class="row" style="margin-top:14px">
-      <button class="btn primary inline grow" id="save-ok" style="margin:0">Save</button>
-      <button class="btn inline grow" id="save-cancel" style="margin:0">Cancel</button>
+      <button class="btn primary inline grow" id="save-ok" style="margin:0">Speichern</button>
+      <button class="btn inline grow" id="save-cancel" style="margin:0">Abbrechen</button>
     </div>
   </div></div>
 
   <!-- ===================== LOAD DIALOG ===================== -->
   <div id="dlg-load" class="modal hidden"><div class="card">
     <div class="game-title" style="font-size:24px">Hangar</div>
-    <div class="game-sub" style="margin-bottom:4px">saved designs — fly or edit</div>
+    <div class="game-sub" style="margin-bottom:4px">gespeicherte Entwürfe — fliegen oder bearbeiten</div>
     <div class="title-stripe" style="margin:10px 0 6px"></div>
     <div id="load-list"></div>
     <div class="row">
-      <button class="btn small inline grow" id="load-importbtn" style="margin:0">Import .json</button>
-      <button class="btn small inline grow" id="load-close" style="margin:0">Close</button>
+      <button class="btn small inline grow" id="load-importbtn" style="margin:0">.json importieren</button>
+      <button class="btn small inline grow" id="load-close" style="margin:0">Schließen</button>
     </div>
   </div></div>
 
@@ -443,12 +444,23 @@ h3.sec{font:800 11px var(--mono);letter-spacing:2px;text-transform:uppercase;col
   <div id="quit" class="screen hidden">
     <div class="veil" style="background:rgba(3,4,7,.92)"></div>
     <div class="card" style="text-align:center">
-      <div class="game-title" style="font-size:28px">Thanks for flying ✈</div>
-      <div class="game-sub">you can close this tab now</div>
+      <div class="game-title" style="font-size:28px">Danke fürs Fliegen ✈</div>
+      <div class="game-sub">du kannst diesen Tab jetzt schließen</div>
       <div class="title-stripe" style="margin:16px auto"></div>
-      <button class="btn" id="quit-back">Back to menu</button>
+      <button class="btn" id="quit-back">Zurück zum Menü</button>
     </div>
   </div>
+
+  <!-- ===================== QUIT CONFIRM ===================== -->
+  <div id="dlg-quit-confirm" class="modal hidden"><div class="card" style="text-align:center">
+    <div class="game-title" style="font-size:24px">Spiel beenden?</div>
+    <div class="game-sub">bist du sicher?</div>
+    <div class="title-stripe" style="margin:14px auto"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn primary inline grow" id="quit-confirm-yes" style="margin:0">Ja</button>
+      <button class="btn inline grow" id="quit-confirm-no" style="margin:0">Nein</button>
+    </div>
+  </div></div>
 
   <div id="toast"></div>
 </div>
@@ -473,7 +485,7 @@ const CFG = {
   // flight tuning
   CL_A: 4.6, CL_MAX: 1.45, STALL_A: 0.30,
   CD0: 0.026, K_IND: 0.055, CD_PART: 0.012,
-  CTRL: { ail: 2.1, elev: 3.4, rud: 1.7 },
+  CTRL: { ail: 0.84, elev: 1.36, rud: 0.68 }, // sensitivity reduced 60% vs original (2.1/3.4/1.7)
   DAMP: { p: 4.2, q: 6.0, r: 5.2 },
   STAB: { pitch: 4.2, yaw: 2.6, dihedral: 0.5 },
   CRASH_V: 13, CRASH_TOTAL: 22,
@@ -529,7 +541,7 @@ addEventListener('keydown', e=>{
   if(['Space','Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
 });
 addEventListener('keyup', e=>{ KEY[e.code]=false; });
-addEventListener('blur', ()=>{ for(const k in KEY) KEY[k]=false; });
+addEventListener('blur', ()=>{ for(const k in KEY) KEY[k]=false; FL.freeLook=false; });
 addEventListener('contextmenu', e=>{ if(e.target.id==='gl') e.preventDefault(); });
 
 /* ============================================================
@@ -810,8 +822,8 @@ const bat=(id,name,w,cap,mass)=>DEF({id,name,cat:'Electronics',mass,dims:[w,w*.5
   build:C=>{const a=GB.box(w,w*.55,w*1.15,C);
     const t1=GB.box(w*.16,w*.14,w*.16,0xd9b64a); t1.position.set(w*.26,w*.34,0);
     const t2=GB.box(w*.16,w*.14,w*.16,0x9aa2ad); t2.position.set(-w*.26,w*.34,0); return GRP(a,t1,t2);}});
-bat('bat_s','Battery Small',.4,300,8); bat('bat_m','Battery Medium',.6,900,20);
-bat('bat_l','Battery Large',.85,2200,45); bat('bat_xl','Battery XL',1.1,5000,90);
+bat('bat_s','Battery Small',.4,3000,8); bat('bat_m','Battery Medium',.6,9000,20);
+bat('bat_l','Battery Large',.85,22000,45); bat('bat_xl','Battery XL',1.1,50000,90);
 DEF({id:'relay',name:'Power Relay',cat:'Electronics',mass:5,dims:[.35,.35,.35],relay:true,color:'#5b636e',
   build:C=>{const a=GB.box(.35,.35,.35,C); const b=GB.cylY(.05,.05,.3,0xd9b64a); b.position.y=.3; return GRP(a,b);}});
 DEF({id:'fc',name:'Flight Computer',cat:'Electronics',mass:8,dims:[.45,.25,.45],fc:true,color:'#23272e',
@@ -948,6 +960,30 @@ DEF({id:'droptank',name:'Drop Tank',cat:'Decorative',mass:60,dims:[.4,.4,2.2],
 
 const PMAP={}; PARTS.forEach(p=>PMAP[p.id]=p);
 const CATS=['Structure','Propulsion','Electronics','Landing Gear','Weapons','Decorative'];
+const CAT_DE={Structure:'Struktur',Propulsion:'Antrieb',Electronics:'Elektronik',
+  'Landing Gear':'Fahrwerk',Weapons:'Waffen',Decorative:'Dekoration'};
+const PART_NAME_DE={
+  nose_round:'Bugspitze rund',nose_sharp:'Bugspitze spitz',nose_blunt:'Bugspitze stumpf',tail_cone:'Heckkegel',
+  bubble_s:'Cockpithaube S',bubble_m:'Cockpithaube M',bubble_l:'Cockpithaube L',panel:'Strukturpaneel',
+  wing:'Tragfläche',wing_delta:'Deltaflügel',wing_swept:'Pfeilflügel',canard:'Entenflügel',
+  fin_v:'Seitenleitwerk',fin_h:'Höhenleitwerk',adapter:'Rumpfadapter',scoop:'Lufthutze',
+  belly:'Rumpfverkleidung',wingtip:'Flügelspitze',fus_s:'Rumpf klein',fus_m:'Rumpf mittel',
+  fus_l:'Rumpf groß',fus_xl:'Rumpf XL',aileron:'Querruder',elevator:'Höhenruder',rudder:'Seitenruder',
+  eng_prop:'Propellermotor',eng_tprop:'Turboprop-Triebwerk',eng_jet:'Turbojet-Triebwerk',
+  eng_ab:'Nachbrenner-Turbojet',eng_rocket:'Raketentriebwerk',noz_vec:'Schubvektordüse',
+  intake:'Lufteinlass',exhaust:'Auspuffdüse',reverser:'Schubumkehr',
+  relay:'Stromrelais',fc:'Flugcomputer',gyro:'Kreisel',antenna_e:'Antenne',
+  bat_s:'Batterie klein',bat_m:'Batterie mittel',bat_l:'Batterie groß',bat_xl:'Batterie XL',
+  wheel_s:'Rad klein',wheel_m:'Rad mittel',wheel_l:'Rad groß',rgear_s:'Einziehfahrwerk klein',
+  rgear_l:'Einziehfahrwerk groß',tailwheel:'Spornrad',skid:'Kufe',shock:'Stoßdämpfer',float:'Schwimmer (Wasser)',
+  minigun:'Minigun',cannon:'Kanone',rocketpod:'Raketenbehälter',msl1:'Raketenwerfer ×1',msl3:'Raketenwerfer ×3',
+  baydoor:'Bombenschachtklappe',bomb:'Freifallbombe',msl_guided:'Lenkrakete',cluster:'Streubombe',
+  nuke:'Atombombe',gunpod:'Kanonenbehälter',torpedo:'Torpedo',
+  mast:'Antennenmast',light_r:'Positionslicht rot',light_g:'Positionslicht grün',light_w:'Positionslicht weiß',
+  pitot:'Staurohr',cowling:'Motorverkleidung',hatch:'Luke / Türpaneel',obswin:'Beobachtungsfenster',
+  turret_h:'Rumpfturm-Verkleidung',winglet:'Winglet',droptank:'Abwurftank',
+};
+const partNameDE=def=>PART_NAME_DE[def.id]||def.name;
 
 /* ---------- part instance & mesh building ---------- */
 function mkInst(defId,p=[0,0,0],r=[0,0,0],s=[1,1,1],c){ const d=PMAP[defId];
@@ -973,10 +1009,10 @@ function instCenter(inst,out){ const def=PMAP[inst.d],o=def.off;
 function instMass(inst){ return PMAP[inst.d].mass*Math.abs(inst.s[0]*inst.s[1]*inst.s[2]); }
 
 /* ---------- design serialize ---------- */
-function newDesign(name='Untitled Craft'){ return {v:1,name,parts:[]}; }
+function newDesign(name='Unbenanntes Flugzeug'){ return {v:1,name,parts:[]}; }
 function serializeDesign(d){ return JSON.stringify(d); }
 function deserializeDesign(str){ const o=typeof str==='string'?JSON.parse(str):str;
-  const d=newDesign(o.name||'Imported Craft');
+  const d=newDesign(o.name||'Importiertes Flugzeug');
   (o.parts||[]).forEach(p=>{ if(!PMAP[p.d]) return;
     d.parts.push({id:p.id||U.uid(),d:p.d,p:p.p||[0,0,0],r:p.r||[0,0,0],s:p.s||[1,1,1],c:p.c||PMAP[p.d].color,link:p.link||null}); });
   return d; }
@@ -1031,16 +1067,16 @@ function computeCraft(design){
   info.eff.elev+=.4*info.tailH;
   info.stall=info.wingArea>0? Math.sqrt(2*info.mass*CFG.GRAV/(1.2*info.wingArea*CFG.CL_MAX)) : Infinity;
   // -------- warnings --------
-  if(!info.engines.length) info.warnings.push('No engines — cannot start');
-  if(info.wingArea<0.1) info.warnings.push('No wings — it will not fly');
-  if(!info.gears.length) info.warnings.push('No landing gear — belly start');
+  if(!info.engines.length) info.warnings.push('Keine Triebwerke — kann nicht starten');
+  if(info.wingArea<0.1) info.warnings.push('Keine Tragflächen — fliegt nicht');
+  if(!info.gears.length) info.warnings.push('Kein Fahrwerk — Bauchstart');
   const jets=info.engines.filter(e=>e.snd==='jet').length;
-  if(jets>0 && info.flags.intake<jets) info.warnings.push('Jets need air intakes (−40% thrust)');
+  if(jets>0 && info.flags.intake<jets) info.warnings.push('Düsentriebwerke brauchen Lufteinlässe (−40% Schub)');
   const latOff=info.com.x-info.liftCenter.x;
-  if(Math.abs(latOff)>0.25) info.warnings.push((latOff<0?'Left':'Right')+' side heavy — will roll '+(latOff<0?'left':'right'));
-  if(info.thrustMax>0 && info.thrustMax/(info.mass*CFG.GRAV)<0.16) info.warnings.push('Underpowered — may not take off');
+  if(Math.abs(latOff)>0.25) info.warnings.push((latOff<0?'Links':'Rechts')+'lastig — rollt nach '+(latOff<0?'links':'rechts'));
+  if(info.thrustMax>0 && info.thrustMax/(info.mass*CFG.GRAV)<0.16) info.warnings.push('Zu wenig Leistung — startet eventuell nicht');
   const drawKW=info.engines.reduce((a,e)=>a+e.kW,0), genKW=info.engines.reduce((a,e)=>a+e.gen,0);
-  if(drawKW>genKW && info.batKJ<=0 && info.engines.length) info.warnings.push('No battery — engines cannot run');
+  if(drawKW>genKW && info.batKJ<=0 && info.engines.length) info.warnings.push('Keine Batterie — Triebwerke laufen nicht');
   return info;
 }
 
@@ -1103,17 +1139,17 @@ const ED = {
   },
   refresh(){ // stats + counters + CoM
     const info=computeCraft(S.design);
-    $('ed-count').innerHTML='Placed <b>'+S.design.parts.length+'</b> / '+CFG.PART_LIMIT;
+    $('ed-count').innerHTML='Platziert <b>'+S.design.parts.length+'</b> / '+CFG.PART_LIMIT;
     const twr=info.mass>0? info.thrustMax/(info.mass*CFG.GRAV):0;
     const stallK=isFinite(info.stall)? U.fmt(info.stall*3.6):'—';
     let h='';
-    h+='Mass <b>'+U.fmt(info.mass)+' kg</b><br>';
-    h+='Thrust <b>'+U.fmt(info.thrustMax/1000,1)+' kN</b> · T/W <b class="'+(twr>.3?'ok':twr>.15?'mid':'bad')+'">'+U.fmt(twr,2)+'</b><br>';
-    h+='Wing area <b>'+U.fmt(info.wingArea,1)+' m²</b><br>';
-    h+='Stall ≈ <b>'+stallK+' km/h</b><br>';
-    h+='Battery <b>'+U.fmt(info.batKJ)+' kJ</b> · Engines <b>'+info.engines.length+'</b>';
+    h+='Masse <b>'+U.fmt(info.mass)+' kg</b><br>';
+    h+='Schub <b>'+U.fmt(info.thrustMax/1000,1)+' kN</b> · Schub/Gewicht <b class="'+(twr>.3?'ok':twr>.15?'mid':'bad')+'">'+U.fmt(twr,2)+'</b><br>';
+    h+='Flügelfläche <b>'+U.fmt(info.wingArea,1)+' m²</b><br>';
+    h+='Abrissgeschw. ≈ <b>'+stallK+' km/h</b><br>';
+    h+='Batterie <b>'+U.fmt(info.batKJ)+' kJ</b> · Triebwerke <b>'+info.engines.length+'</b>';
     for(const w of info.warnings) h+='<br><span class="bad">⚠ '+w+'</span>';
-    if(!info.warnings.length && info.n) h+='<br><span class="ok">✔ Ready to fly</span>';
+    if(!info.warnings.length && info.n) h+='<br><span class="ok">✔ Flugbereit</span>';
     $('craft-stats').innerHTML=h;
     this._info=info; this.updateCoM(info);
   },
@@ -1133,7 +1169,7 @@ const ED = {
 
   /* ---------- undo ---------- */
   pushUndo(){ this.undoStack.push(serializeDesign(S.design)); if(this.undoStack.length>40) this.undoStack.shift(); },
-  undo(){ const s=this.undoStack.pop(); if(!s){ toast('Nothing to undo'); return; }
+  undo(){ const s=this.undoStack.pop(); if(!s){ toast('Nichts rückgängig zu machen'); return; }
     const name=S.design.name; S.design=deserializeDesign(s); S.design.name=name;
     this.select(null); this.rebuildAll(); },
 
@@ -1142,9 +1178,9 @@ const ED = {
     const root=$('ed-palette'); root.innerHTML='';
     for(const cat of CATS){ const list=PARTS.filter(p=>p.cat===cat);
       const det=document.createElement('details'); det.className='cat'; if(cat==='Structure'||cat==='Propulsion') det.open=true;
-      det.innerHTML='<summary>'+cat+'<span class="n">'+list.length+'</span></summary>';
+      det.innerHTML='<summary>'+CAT_DE[cat]+'<span class="n">'+list.length+'</span></summary>';
       for(const def of list){ const b=document.createElement('button'); b.className='pbtn'; b.dataset.pid=def.id;
-        b.innerHTML=def.name+'<span class="pm">'+def.mass+'kg</span>';
+        b.innerHTML=partNameDE(def)+'<span class="pm">'+def.mass+'kg</span>';
         b.onclick=()=>{ AU.click(); this.ghostDef===def? this.cancelGhost() : this.startGhost(def); };
         det.appendChild(b); }
       root.appendChild(det); }
@@ -1154,21 +1190,21 @@ const ED = {
 
   /* ---------- ghost placement ---------- */
   startGhost(def){
-    if(S.design.parts.length>=CFG.PART_LIMIT){ toast('Part limit reached (500)','warn'); return; }
+    if(S.design.parts.length>=CFG.PART_LIMIT){ toast('Teile-Limit erreicht (500)','warn'); return; }
     this.cancelGhost(); this.select(null);
     this.ghostDef=def; this.ghostRot=[0,0,0];
     const g=def.build(new THREE.Color(def.color).getHex());
     g.traverse(o=>{ if(o.material){ o.material=o.material.clone(); o.material.transparent=true;
       o.material.opacity=.45; o.material.depthWrite=false; } });
     g.visible=false; this.ghost=g; this.scene.add(g); this.markPalette();
-    $('ed-hint').innerHTML='<span class="kbd">Click</span> place · <span class="kbd">R</span> rotate 90° · <span class="kbd">Esc</span>/<span class="kbd">RMB</span> cancel'
-      + (this.sym?' · <span class="kbd">⧉</span> mirrored':'');
+    $('ed-hint').innerHTML='<span class="kbd">Klick</span> platzieren · <span class="kbd">R</span> 90° drehen · <span class="kbd">Esc</span>/<span class="kbd">RMT</span> abbrechen'
+      + (this.sym?' · <span class="kbd">⧉</span> gespiegelt':'');
   },
   cancelGhost(){ if(this.ghost){ this.scene.remove(this.ghost); this.ghost=null; }
     this.ghostDef=null; this.markPalette(); this.defaultHint(); },
-  defaultHint(){ $('ed-hint').innerHTML='<span class="kbd">LMB</span> place / select · <span class="kbd">drag</span> orbit · '+
-    '<span class="kbd">RMB</span> pan · <span class="kbd">X</span><span class="kbd">Y</span><span class="kbd">Z</span>+drag rotate part · '+
-    '<span class="kbd">S</span> symmetry · <span class="kbd">Del</span> remove · <span class="kbd">Esc</span> deselect'; },
+  defaultHint(){ $('ed-hint').innerHTML='<span class="kbd">LMT</span> platzieren / auswählen · <span class="kbd">ziehen</span> Kamera drehen · '+
+    '<span class="kbd">RMT</span> verschieben · <span class="kbd">X</span><span class="kbd">Y</span><span class="kbd">Z</span>+ziehen Teil drehen · '+
+    '<span class="kbd">S</span> Symmetrie · <span class="kbd">Entf</span> entfernen · <span class="kbd">Esc</span> abwählen'; },
   castMouse(exclude){
     this.ray.setFromCamera({x:this.mouse.x,y:this.mouse.y},this.cam);
     const objs=[]; this.partsRoot.children.forEach(g=>{ if(g!==exclude && (!exclude||g.userData.inst.link!==((exclude.userData||{}).inst||{}).id)) objs.push(g); });
@@ -1212,7 +1248,7 @@ const ED = {
   },
   place(){
     if(!this.ghostValid) return;
-    if(S.design.parts.length>=CFG.PART_LIMIT){ toast('Part limit reached (500)','warn'); this.cancelGhost(); return; }
+    if(S.design.parts.length>=CFG.PART_LIMIT){ toast('Teile-Limit erreicht (500)','warn'); this.cancelGhost(); return; }
     this.pushUndo();
     const inst=mkInst(this.ghostDef.id,this.ghost.position.toArray(),[...this.ghostRot]);
     S.design.parts.push(inst);
@@ -1238,8 +1274,8 @@ const ED = {
     this.highlight(this.groups[inst.id],true);
     box.classList.add('show');
     const def=PMAP[inst.d];
-    $('i-name').textContent=def.name+(inst.link?' ⧉':'');
-    $('i-mass').textContent=U.fmt(instMass(inst),1)+' kg · '+def.cat;
+    $('i-name').textContent=partNameDE(def)+(inst.link?' ⧉':'');
+    $('i-mass').textContent=U.fmt(instMass(inst),1)+' kg · '+CAT_DE[def.cat];
     this._guard=true;
     $('i-px').value=inst.p[0]; $('i-py').value=inst.p[1]; $('i-pz').value=inst.p[2];
     $('i-rx').value=inst.r[0]; $('i-ry').value=inst.r[1]; $('i-rz').value=inst.r[2];
@@ -1329,7 +1365,7 @@ const ED = {
   },
   keyUp(e){ if(e.code===this.axisKey) this.axisKey=null; },
   setSym(v){ this.sym=v; $('ed-sym').classList.toggle('on',v);
-    toast(v?'Symmetry ON — parts mirror across centerline':'Symmetry OFF'); },
+    toast(v?'Symmetrie AN — Teile spiegeln sich an der Mittelachse':'Symmetrie AUS'); },
   setCom(v){ this.comOn=v; $('ed-com').classList.toggle('on',v); this.refresh(); },
 
   update(dt){
@@ -1346,17 +1382,17 @@ const ED = {
     $('ed-com').onclick=()=>{ AU.click(); this.setCom(!this.comOn); };
     $('ed-undo').onclick=()=>{ AU.click(); this.undo(); };
     $('ed-clear').onclick=()=>{ AU.click(); if(!S.design.parts.length) return;
-      this.pushUndo(); S.design.parts=[]; this.select(null); this.rebuildAll(); toast('Craft cleared — Ctrl+Z to undo'); };
+      this.pushUndo(); S.design.parts=[]; this.select(null); this.rebuildAll(); toast('Flugzeug geleert — Strg+Z zum Rückgängigmachen'); };
     $('ed-fly').onclick=()=>{ AU.click();
-      if(!S.design.parts.length){ toast('Place some parts first!','warn'); return; }
+      if(!S.design.parts.length){ toast('Zuerst Teile platzieren!','warn'); return; }
       ROUTER.go('flight'); };
     $('ed-menu').onclick=()=>{ AU.click(); ROUTER.go('menu'); };
-    $('ed-name').addEventListener('input',()=>{ S.design.name=$('ed-name').value||'Untitled Craft'; });
+    $('ed-name').addEventListener('input',()=>{ S.design.name=$('ed-name').value||'Unbenanntes Flugzeug'; });
     $('ed-save').onclick=()=>{ AU.click(); HANGAR.openSave(); };
     $('ed-loadbtn').onclick=()=>{ AU.click(); HANGAR.openLoad('editor'); };
     $('ed-export').onclick=()=>{ AU.click(); HANGAR.exportJSON(S.design); };
     $('ed-importbtn').onclick=()=>{ AU.click(); $('ed-import').click(); };
-    $('ed-import').addEventListener('change',e=>HANGAR.importFile(e,d=>{ this.pushUndo(); this.open(d); toast('Imported "'+d.name+'"'); }));
+    $('ed-import').addEventListener('change',e=>HANGAR.importFile(e,d=>{ this.pushUndo(); this.open(d); toast('Importiert: "'+d.name+'"'); }));
     // inspector numeric fields
     const bind=(id,arr,idx,snapG)=>{ $(id).addEventListener('change',()=>{ if(this._guard||!this.sel) return;
       this.pushUndo(); let v=parseFloat($(id).value)||0; if(snapG) v=U.snap(v,.01);
@@ -1392,22 +1428,22 @@ const HANGAR = {
     const box=$('load-list'); box.innerHTML='';
     const row=(name,meta,design,builtin)=>{
       const r=document.createElement('div'); r.className='design-row';
-      r.innerHTML='<div class="grow"><div class="dname">'+name+(builtin?' <span class="tag">demo</span>':'')+
+      r.innerHTML='<div class="grow"><div class="dname">'+name+(builtin?' <span class="tag">Demo</span>':'')+
         '</div><div class="dmeta">'+meta+'</div></div>';
       const mk=(t,cls,fn)=>{ const b=document.createElement('button'); b.className='mini-btn '+cls;
         b.textContent=t; b.onclick=fn; r.appendChild(b); };
-      mk('Fly','fly',()=>{ AU.click(); this.closeLoad(); S.design=design(); ROUTER.go('flight'); });
-      mk('Edit','',()=>{ AU.click(); this.closeLoad(); S.design=design(); ROUTER.go('editor'); });
+      mk('Fliegen','fly',()=>{ AU.click(); this.closeLoad(); S.design=design(); ROUTER.go('flight'); });
+      mk('Bearbeiten','',()=>{ AU.click(); this.closeLoad(); S.design=design(); ROUTER.go('editor'); });
       if(!builtin){ mk('⤓','',()=>this.exportJSON(design()));
         mk('✕','del',()=>{ AU.click(); this.del(name); this.renderList(); }); }
       box.appendChild(r); };
-    for(const b of BUILTINS) row(b.name, b.parts.length+' parts · built-in', ()=>deserializeDesign(serializeDesign(b)), true);
+    for(const b of BUILTINS) row(b.name, b.parts.length+' Teile · integriert', ()=>deserializeDesign(serializeDesign(b)), true);
     const m=this.list(), names=Object.keys(m).sort((a,b2)=>m[b2].ts-m[a].ts);
     for(const n of names){ const e=m[n];
-      row(n, e.n+' parts · '+new Date(e.ts).toLocaleDateString(), ()=>deserializeDesign(e.json), false); }
+      row(n, e.n+' Teile · '+new Date(e.ts).toLocaleDateString(), ()=>deserializeDesign(e.json), false); }
     if(!names.length){ const d=document.createElement('div'); d.className='dmeta';
       d.style.cssText='padding:10px;color:var(--mut2)';
-      d.textContent=STORE.persistent?'No saved designs yet — build something!':'Note: storage is blocked in this preview; saves last only for this session.';
+      d.textContent=STORE.persistent?'Noch keine gespeicherten Entwürfe — bau etwas!':'Hinweis: Speicher ist in dieser Vorschau blockiert; Speicherstände gelten nur für diese Sitzung.';
       box.appendChild(d); }
   },
   exportJSON(design){ try{
@@ -1415,13 +1451,13 @@ const HANGAR = {
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
       a.download=(design.name||'craft').replace(/[^\w\- ]/g,'').trim().replace(/ +/g,'_')+'.json';
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
-      toast('Exported "'+design.name+'.json"'); }catch(e){ toast('Export failed','bad'); } },
+      toast('Exportiert: "'+design.name+'.json"'); }catch(e){ toast('Export fehlgeschlagen','bad'); } },
   importFile(e,cb){ const f=e.target.files[0]; e.target.value=''; if(!f) return;
     const r=new FileReader(); r.onload=()=>{ try{ cb(deserializeDesign(r.result)); }
-      catch(err){ toast('Invalid design file','bad'); } }; r.readAsText(f); },
+      catch(err){ toast('Ungültige Entwurfsdatei','bad'); } }; r.readAsText(f); },
   wire(){
-    $('save-ok').onclick=()=>{ AU.click(); const n=($('save-name').value||'Untitled Craft').trim();
-      this.save(n,S.design); $('ed-name').value=n; this.closeSave(); toast('Saved "'+n+'"'+(STORE.persistent?'':' (session only)')); };
+    $('save-ok').onclick=()=>{ AU.click(); const n=($('save-name').value||'Unbenanntes Flugzeug').trim();
+      this.save(n,S.design); $('ed-name').value=n; this.closeSave(); toast('Gespeichert: "'+n+'"'+(STORE.persistent?'':' (nur diese Sitzung)')); };
     $('save-cancel').onclick=()=>{ AU.click(); this.closeSave(); };
     $('load-close').onclick=()=>{ AU.click(); this.closeLoad(); };
     $('load-importbtn').onclick=()=>{ AU.click(); $('ed-import').click(); this.closeLoad(); };
@@ -1505,7 +1541,7 @@ function vnoise(x,z){ const xi=Math.floor(x),zi=Math.floor(z),xf=x-xi,zf=z-zi,
   sx=xf*xf*(3-2*xf),sz=zf*zf*(3-2*zf),
   a=hash2(xi,zi),b=hash2(xi+1,zi),c=hash2(xi,zi+1),d=hash2(xi+1,zi+1);
   return U.lerp(U.lerp(a,b,sx),U.lerp(c,d,sx),sz); }
-function terrainH(x,z){
+function terrainHRaw(x,z){
   const r=Math.hypot(x,z);
   if(r<CFG.FLAT_R) return 0;
   const t=U.clamp((r-CFG.FLAT_R)/3500,0,1), ramp=t*t*(3-2*t);
@@ -1514,6 +1550,31 @@ function terrainH(x,z){
   h=Math.max(0,h*520+90*vnoise(x/900,z/900)*t)-20*t;
   return Math.max(0,h*ramp);
 }
+
+/* ---------- 10 airports scattered across the world: 2 mountaintop, 2 water, 6 varied land ---------- */
+const AIRPORTS=[
+  {id:'home',name:'Ali Field',      x:0,     z:0,     heading:0,   type:'land',     flatR:CFG.FLAT_R, rampR:3500, baseH:0, isHome:true},
+  {id:'mtn_nw',name:'Gipfelfeld Nordwest', x:-5643, z:-15505,heading:.4, type:'mountain',flatR:1700, rampR:1300},
+  {id:'mtn_se',name:'Gipfelfeld Südost',   x:13023, z:10927, heading:2.4,type:'mountain',flatR:1700, rampR:1300},
+  {id:'wtr_e', name:'Wasserflughafen Ost', x:8000,  z:0,     heading:1.2,type:'water',   flatR:1700, rampR:1300, baseH:0},
+  {id:'wtr_s', name:'Wasserflughafen Süd', x:0,     z:8000,  heading:.3, type:'water',   flatR:1700, rampR:1300, baseH:0},
+  {id:'fld_s', name:'Feldflughafen Süd',      x:2223,  z:6107,  heading:.9, type:'land', flatR:1700, rampR:1300},
+  {id:'fld_sw',name:'Hochland Südwest',       x:-2394, z:6578,  heading:2.6,type:'land', flatR:1700, rampR:1300},
+  {id:'fld_w', name:'Feldflughafen West',     x:-6108, z:2223,  heading:1.7,type:'land', flatR:1700, rampR:1300},
+  {id:'fld_nw',name:'Feldflughafen Nordwest', x:-6062, z:-3500, heading:.5, type:'land', flatR:1700, rampR:1300},
+  {id:'fld_ne',name:'Hochland Nordost',       x:3250,  z:-5629, heading:2.2,type:'land', flatR:1700, rampR:1300},
+];
+for(const ap of AIRPORTS){ if(ap.baseH===undefined) ap.baseH=terrainHRaw(ap.x,ap.z); }
+function terrainH(x,z){
+  const raw=terrainHRaw(x,z);
+  for(const ap of AIRPORTS){ if(ap.isHome) continue; // home already flattened by the raw formula itself
+    const dr=Math.hypot(x-ap.x,z-ap.z);
+    if(dr<ap.flatR) return ap.baseH;
+    if(dr<ap.flatR+ap.rampR){ const t=(dr-ap.flatR)/ap.rampR, s=t*t*(3-2*t); return U.lerp(ap.baseH,raw,s); }
+  }
+  return raw;
+}
+function airportPadAt(x,z){ for(const ap of AIRPORTS){ if(Math.hypot(x-ap.x,z-ap.z)<ap.flatR) return ap; } return null; }
 const W = {
   scene:null, built:'', sun:null, hemi:null, sky:null, sunSpr:null,
   clouds:[], runwayY:0.05, fogBase:{near:600,far:30000},
@@ -1522,107 +1583,102 @@ const W = {
     const sc=this.scene=new THREE.Scene();
     const skyCol=new THREE.Color(0x9fd2f5);
     sc.fog=new THREE.Fog(skyCol.getHex(),this.fogBase.near,this.fogBase.far);
-    // ---- sky dome (vertex gradient) ----
-    { const g=new THREE.SphereGeometry(46000,24,14), pos=g.attributes.position,
-        cols=new Float32Array(pos.count*3), top=new THREE.Color(0x3f8fe0),
-        mid=new THREE.Color(0x9fd2f5), low=new THREE.Color(0xdcecf7);
+    // ---- sky dome (vertex gradient, warmer horizon haze + deeper zenith) ----
+    { const g=new THREE.SphereGeometry(46000,32,20), pos=g.attributes.position,
+        cols=new Float32Array(pos.count*3), zenith=new THREE.Color(0x1c5cad),
+        mid=new THREE.Color(0x7fb6e8), horizon=new THREE.Color(0xd7c9a8), low=new THREE.Color(0xb99a6d);
       for(let i=0;i<pos.count;i++){ const y=pos.getY(i)/46000,
-          c=y>0? mid.clone().lerp(top,Math.pow(y,.7)) : mid.clone().lerp(low,Math.min(1,-y*3));
+          c=y>0.02? mid.clone().lerp(zenith,Math.pow(y,.55))
+          : y>-0.02? mid.clone().lerp(horizon,1-Math.abs(y)*30)
+          : horizon.clone().lerp(low,Math.min(1,-y*4));
         cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b; }
       g.setAttribute('color',new THREE.BufferAttribute(cols,3));
       this.sky=new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide,fog:false}));
       sc.add(this.sky); }
     // ---- lights ----
-    this.hemi=new THREE.HemisphereLight(0xcfe8ff,0x53663f,.75); sc.add(this.hemi);
-    const sun=this.sun=new THREE.DirectionalLight(0xfff2da,1.15);
+    this.hemi=new THREE.HemisphereLight(0xbcd6f0,0x4a5636,.62); sc.add(this.hemi);
+    const sun=this.sun=new THREE.DirectionalLight(0xfff0d2,1.35);
     sun.position.set(3000,5200,1800);
     if(q!=='low'){ sun.castShadow=true; const s=q==='high'?2048:1024;
       sun.shadow.mapSize.set(s,s); const c=sun.shadow.camera;
       c.left=-140;c.right=140;c.top=140;c.bottom=-140;c.near=100;c.far=12000; sun.shadow.bias=-0.0015; }
     sc.add(sun); sc.add(sun.target);
+    const fill=new THREE.DirectionalLight(0x6f8fc7,.28); fill.position.set(-4000,2200,-3000); sc.add(fill);
     const spr=this.sunSpr=new THREE.Sprite(new THREE.SpriteMaterial({map:FXTEX.glow,color:0xfff6d8,
-      transparent:true,fog:false,depthWrite:false})); spr.scale.set(9000,9000,1);
-    spr.position.set(21000,29000,12000); sc.add(spr);
+      transparent:true,fog:false,depthWrite:false})); spr.scale.set(4200,4200,1);
+    const halo=this.sunHalo=new THREE.Sprite(new THREE.SpriteMaterial({map:FXTEX.glow,color:0xffe9b0,
+      transparent:true,fog:false,depthWrite:false,opacity:.45})); halo.scale.set(11000,11000,1);
+    sc.add(halo,spr);
+    this.sunDir=new THREE.Vector3(2600,4600,1500).normalize();
+    spr.position.copy(this.sunDir).multiplyScalar(30000); halo.position.copy(spr.position);
     // ---- terrain ----
-    { const seg=q==='low'?140:q==='med'?190:240,
+    { const seg=q==='low'?170:q==='med'?230:300,
         g=new THREE.PlaneGeometry(CFG.WORLD_HALF*2,CFG.WORLD_HALF*2,seg,seg);
       g.rotateX(-Math.PI/2);
       const pos=g.attributes.position, cols=new Float32Array(pos.count*3),
-        cLow=new THREE.Color(0x6f9c4e), cField=new THREE.Color(0x7fa85a),
-        cHigh=new THREE.Color(0x8f9384), cRock=new THREE.Color(0x9aa0a6);
+        cField=new THREE.Color(0x6f9450), cField2=new THREE.Color(0x86a259), cLow=new THREE.Color(0x5c8447),
+        cHigh=new THREE.Color(0x8a8570), cRock=new THREE.Color(0x8d8f8c), cSnow=new THREE.Color(0xf2f5f8);
       for(let i=0;i<pos.count;i++){ const x=pos.getX(i),z=pos.getZ(i),h=terrainH(x,z);
         pos.setY(i,h);
-        let c; const n=vnoise(x/300,z/300);
-        if(h<3) c=cField.clone().lerp(cLow,n);
-        else if(h<220) c=cLow.clone().lerp(cHigh,h/220);
-        else c=cHigh.clone().lerp(cRock,Math.min(1,(h-220)/260));
-        c.offsetHSL(0,(n-.5)*.05,(n-.5)*.04);
+        let c; const n=vnoise(x/300,z/300), patch=vnoise(x/55+91,z/55+37);
+        if(h<3) c=cField.clone().lerp(cField2,patch);
+        else if(h<40) c=cField.clone().lerp(cLow,U.clamp(h/40,0,1));
+        else if(h<230) c=cLow.clone().lerp(cHigh,(h-40)/190);
+        else if(h<340) c=cHigh.clone().lerp(cRock,(h-230)/110);
+        else c=cRock.clone().lerp(cSnow,U.clamp((h-340)/70,0,1));
+        c.offsetHSL(0,(n-.5)*.06,(patch-.5)*.05);
         cols[i*3]=c.r;cols[i*3+1]=c.g;cols[i*3+2]=c.b; }
       g.computeVertexNormals();
       g.setAttribute('color',new THREE.BufferAttribute(cols,3));
-      const m=new THREE.Mesh(g,new THREE.MeshPhongMaterial({vertexColors:true,flatShading:true,shininess:2}));
+      const m=new THREE.Mesh(g,new THREE.MeshPhongMaterial({vertexColors:true,flatShading:false,shininess:3}));
       m.receiveShadow=q!=='low'; sc.add(m); }
-    // ---- runway (canvas texture) ----
-    { const cv=document.createElement('canvas'); cv.width=256; cv.height=2048; const g=cv.getContext('2d');
-      g.fillStyle='#54575c'; g.fillRect(0,0,256,2048);
-      g.fillStyle='rgba(0,0,0,.12)'; for(let i=0;i<260;i++) g.fillRect(Math.random()*256,Math.random()*2048,Math.random()*40,2);
-      g.fillStyle='#e8e9ea';
-      for(let y=90;y<2048-90;y+=90) g.fillRect(122,y,12,48);              // centerline
-      g.fillRect(6,0,8,2048); g.fillRect(242,0,8,2048);                    // edge lines
-      for(const yy of [12,2048-44]) for(let i=0;i<8;i++) g.fillRect(20+i*28,yy,16,32); // thresholds
-      g.font='bold 110px Arial'; g.textAlign='center';
-      g.save(); g.translate(128,190); g.fillText('18',0,0); g.restore();
-      g.save(); g.translate(128,2048-150); g.rotate(Math.PI); g.fillText('36',0,0); g.restore();
-      const tex=new THREE.CanvasTexture(cv); tex.anisotropy=4;
-      const rw=new THREE.Mesh(new THREE.PlaneGeometry(CFG.RUNWAY_W,CFG.RUNWAY_L),
-        new THREE.MeshPhongMaterial({map:tex,shininess:4}));
-      rw.rotation.x=-Math.PI/2; rw.position.y=this.runwayY; rw.receiveShadow=q!=='low'; sc.add(rw);
-      // apron + taxiway
-      const ap=new THREE.Mesh(new THREE.PlaneGeometry(220,180),
-        new THREE.MeshPhongMaterial({color:0x5d6065,shininess:4}));
-      ap.rotation.x=-Math.PI/2; ap.position.set(160,.04,900); ap.receiveShadow=q!=='low'; sc.add(ap);
-      const tx=new THREE.Mesh(new THREE.PlaneGeometry(120,24),ap.material);
-      tx.rotation.x=-Math.PI/2; tx.position.set(75,.045,900); sc.add(tx); }
-    // ---- airport buildings ----
-    { const grp=new THREE.Group();
-      const hang=_mesh(new THREE.BoxGeometry(60,14,42),MAT(0xbfc4ca)); hang.position.set(210,7,860);
-      const roofG=new THREE.CylinderGeometry(21,21,60,16,1,false,0,Math.PI); roofG.rotateZ(Math.PI/2);
-      const roof=_mesh(roofG,MAT(0xff8c2a)); roof.position.set(210,14,860);
-      const door=_mesh(new THREE.BoxGeometry(50,11,1),MAT(0x2a2e34)); door.position.set(210,5.5,838.6);
-      const tower=_mesh(new THREE.BoxGeometry(10,26,10),MAT(0xd9dee5)); tower.position.set(150,13,960);
-      const cab=_mesh(new THREE.BoxGeometry(15,6,15),MAT(0x3a76a8)); cab.position.set(150,29,960);
-      const cap=_mesh(new THREE.ConeGeometry(9,4,4),MAT(0xff8c2a)); cap.position.set(150,34,960); cap.rotation.y=.78;
-      const sock=_mesh(new THREE.ConeGeometry(1.4,6,8),MAT(0xff8c2a)); sock.rotation.z=Math.PI/2;
-      sock.position.set(60,10,760);
-      const pole=_mesh(new THREE.CylinderGeometry(.2,.3,10,6),MAT(0x9aa2ad)); pole.position.set(60,5,760);
-      grp.add(hang,roof,door,tower,cab,cap,sock,pole);
-      grp.traverse(o=>{ if(o.isMesh){o.castShadow=q!=='low'; o.receiveShadow=true;} });
-      sc.add(grp); }
+    // ---- airports: runway, apron, hangar, tower, name plate — all 10 fields ----
+    if(!this._runwayTex) this._runwayTex=this.buildRunwayTexture();
+    for(const ap of AIRPORTS) this.buildAirport(sc,ap,q);
     // ---- mountain ring ----
-    { const grp=new THREE.Group(), mat=new THREE.MeshPhongMaterial({color:0x8b9188,flatShading:true,shininess:2});
-      for(let i=0;i<30;i++){ const a=i/30*Math.PI*2+hash2(i,7)*.3,
-          r=U.lerp(16500,23500,hash2(i,3)), h=U.lerp(1100,2800,hash2(i,11));
-        const m=new THREE.Mesh(new THREE.ConeGeometry(U.lerp(1800,3600,hash2(i,5)),h,7),mat);
-        m.position.set(Math.cos(a)*r,h/2-60,Math.sin(a)*r);
-        m.rotation.y=hash2(i,9)*3; m.scale.x=U.lerp(.7,1.5,hash2(i,13)); grp.add(m); }
+    { const grp=new THREE.Group();
+      const near=(x,z)=>AIRPORTS.some(ap=>ap.type==='mountain'&&Math.hypot(x-ap.x,z-ap.z)<ap.flatR+2200);
+      for(let i=0;i<34;i++){ const a=i/34*Math.PI*2+hash2(i,7)*.3,
+          r=U.lerp(16500,23500,hash2(i,3)), h=U.lerp(1100,2800,hash2(i,11)),
+          cx=Math.cos(a)*r, cz=Math.sin(a)*r;
+        if(near(cx,cz)) continue;
+        const snowy=h>1900, col=snowy?0xdfe6ec:U.lerp(0,1,hash2(i,17))>.5?0x8b9188:0x7d7a6f;
+        const mat=new THREE.MeshPhongMaterial({color:col,flatShading:true,shininess:2});
+        const m=new THREE.Mesh(new THREE.ConeGeometry(U.lerp(1800,3600,hash2(i,5)),h,8),mat);
+        m.position.set(cx,h/2-60,cz);
+        m.rotation.y=hash2(i,9)*3; m.scale.x=U.lerp(.7,1.5,hash2(i,13)); m.castShadow=q==='high'; grp.add(m);
+        if(snowy){ const cap=new THREE.Mesh(new THREE.ConeGeometry(U.lerp(1800,3600,hash2(i,5))*.32,h*.3,8),
+            new THREE.MeshPhongMaterial({color:0xf4f7fa,flatShading:true,shininess:8}));
+          cap.position.set(cx,h*.86-60,cz); cap.rotation.copy(m.rotation); cap.scale.x=m.scale.x; grp.add(cap); } }
       sc.add(grp); }
-    // ---- forests (instanced) ----
+    // ---- forests (instanced, pine + broadleaf, avoids every airport pad) ----
     { const nT=q==='low'?450:q==='med'?1000:1800;
-      const trunkG=new THREE.CylinderGeometry(.5,.8,4,5), canG=new THREE.ConeGeometry(3.4,9,6);
-      const trunks=new THREE.InstancedMesh(trunkG,new THREE.MeshPhongMaterial({color:0x6b4a2c,flatShading:true}),nT);
-      const cans=new THREE.InstancedMesh(canG,new THREE.MeshPhongMaterial({color:0x3f7a3a,flatShading:true}),nT);
+      const nearAirport=(x,z)=>AIRPORTS.some(ap=>Math.hypot(x-ap.x,z-ap.z)<ap.flatR+500);
+      const trunkG=new THREE.CylinderGeometry(.5,.8,4,5),
+        canG=new THREE.ConeGeometry(3.4,7,6), canG2=new THREE.ConeGeometry(2.4,5,6),
+        canRound=new THREE.DodecahedronGeometry(3.6,0);
+      const trunks=new THREE.InstancedMesh(trunkG,new THREE.MeshPhongMaterial({color:0x5a4227,flatShading:true}),nT);
+      const cans=new THREE.InstancedMesh(canG,new THREE.MeshPhongMaterial({color:0x2f6b34,flatShading:true}),nT);
+      const cans2=new THREE.InstancedMesh(canG2,new THREE.MeshPhongMaterial({color:0x3d7a3f,flatShading:true}),nT);
+      const round=new THREE.InstancedMesh(canRound,new THREE.MeshPhongMaterial({color:0x4f8a45,flatShading:true}),nT);
       const M=new THREE.Matrix4(),P=new THREE.Vector3(),Q=new THREE.Quaternion(),Sv=new THREE.Vector3();
-      let i=0; const nC=Math.ceil(nT/45);
+      let i=0,nPine=0,nBroad=0; const nC=Math.ceil(nT/45);
       for(let c=0;c<nC&&i<nT;c++){ let cx,cz,tries=0;
         do{ cx=U.rand(-14000,14000); cz=U.rand(-14000,14000); tries++; }
-        while((Math.abs(cx)<420&&Math.abs(cz)<2100)&&tries<20);
+        while(nearAirport(cx,cz)&&tries<20);
+        const broadleaf=hash2(c,41)>.55;
         for(let t=0;t<45&&i<nT;t++,i++){ const x=cx+U.rand(-360,360),z=cz+U.rand(-360,360),
             h=terrainH(x,z), s=U.rand(.8,2.1);
           Q.setFromAxisAngle(P.set(0,1,0),U.rand(6.28)); Sv.set(s,s,s);
           M.compose(P.set(x,h+2*s,z),Q,Sv); trunks.setMatrixAt(i,M);
-          M.compose(P.set(x,h+(4+4.5)*s*.95,z),Q,Sv); cans.setMatrixAt(i,M); } }
-      trunks.instanceMatrix.needsUpdate=cans.instanceMatrix.needsUpdate=true;
-      sc.add(trunks,cans); }
+          if(broadleaf){ M.compose(P.set(x,h+(4+3.2)*s,z),Q,Sv); round.setMatrixAt(nBroad++,M); }
+          else{ M.compose(P.set(x,h+(4+3.5)*s*.95,z),Q,Sv); cans.setMatrixAt(nPine,M);
+            M.compose(P.set(x,h+(4+6.2)*s*.95,z),Q,Sv); cans2.setMatrixAt(nPine,M); nPine++; } } }
+      trunks.count=i; cans.count=nPine; cans2.count=nPine; round.count=nBroad;
+      trunks.instanceMatrix.needsUpdate=cans.instanceMatrix.needsUpdate=
+        cans2.instanceMatrix.needsUpdate=round.instanceMatrix.needsUpdate=true;
+      sc.add(trunks,cans,cans2,round); }
+    // ---- rivers / lake shorelines for water airports get drawn inside buildAirport() ----
     // ---- clouds (fly-through) ----
     { this.clouds=[]; const n=q==='low'?10:q==='med'?18:28;
       const mat=new THREE.MeshPhongMaterial({color:0xffffff,flatShading:true,transparent:true,opacity:.92,shininess:0});
@@ -1641,11 +1697,77 @@ const W = {
       this.sun.position.set(focus.x+2600,focus.y+4600,focus.z+1500);
       this.sun.target.position.copy(focus); this.sun.target.updateMatrixWorld();
       this.sky.position.set(focus.x,0,focus.z);
+      if(this.sunSpr){ const p=_v1.copy(this.sunDir).multiplyScalar(30000).add(focus);
+        this.sunSpr.position.copy(p); this.sunHalo.position.copy(p); }
       // in-cloud fog effect
       const d=Math.abs(focus.y-CFG.CLOUD_ALT), band=CFG.CLOUD_BAND,
         k=U.clamp(1-d/band,0,1);
       this.scene.fog.near=U.lerp(this.fogBase.near,60,k);
       this.scene.fog.far=U.lerp(this.fogBase.far,750,k*k*.9+k*.1); }
+  },
+
+  buildRunwayTexture(){
+    const cv=document.createElement('canvas'); cv.width=256; cv.height=2048; const g=cv.getContext('2d');
+    g.fillStyle='#54575c'; g.fillRect(0,0,256,2048);
+    g.fillStyle='rgba(0,0,0,.12)'; for(let i=0;i<260;i++) g.fillRect(Math.random()*256,Math.random()*2048,Math.random()*40,2);
+    g.fillStyle='#e8e9ea';
+    for(let y=90;y<2048-90;y+=90) g.fillRect(122,y,12,48);              // centerline
+    g.fillRect(6,0,8,2048); g.fillRect(242,0,8,2048);                    // edge lines
+    for(const yy of [12,2048-44]) for(let i=0;i<8;i++) g.fillRect(20+i*28,yy,16,32); // thresholds
+    g.font='bold 110px Arial'; g.textAlign='center';
+    g.save(); g.translate(128,190); g.fillText('18',0,0); g.restore();
+    g.save(); g.translate(128,2048-150); g.rotate(Math.PI); g.fillText('36',0,0); g.restore();
+    const tex=new THREE.CanvasTexture(cv); tex.anisotropy=4; return tex;
+  },
+  makeLabelSprite(text){
+    const cv=document.createElement('canvas'); cv.width=512; cv.height=128;
+    const g=cv.getContext('2d'); g.fillStyle='rgba(10,14,20,.78)'; g.fillRect(0,0,512,128);
+    g.strokeStyle='#ff8c2a'; g.lineWidth=6; g.strokeRect(3,3,506,122);
+    g.fillStyle='#fff'; g.font='bold 50px Arial'; g.textAlign='center'; g.textBaseline='middle';
+    g.fillText(text,256,66);
+    const tex=new THREE.CanvasTexture(cv);
+    return new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,fog:false}));
+  },
+  /* place runway + apron + hangar + tower + windsock (+ lake for water fields) at an airport */
+  buildAirport(sc,ap,q){
+    const grp=new THREE.Group(); grp.position.set(ap.x,ap.baseH,ap.z); grp.rotation.y=ap.heading;
+    const rw=new THREE.Mesh(new THREE.PlaneGeometry(CFG.RUNWAY_W,CFG.RUNWAY_L),
+      new THREE.MeshPhongMaterial({map:this._runwayTex,shininess:4}));
+    rw.rotation.x=-Math.PI/2; rw.position.y=this.runwayY; rw.receiveShadow=q!=='low'; grp.add(rw);
+    const apronCol=ap.type==='water'?0x8a6f4c:0x5d6065;
+    const apMat=new THREE.MeshPhongMaterial({color:apronCol,shininess:ap.type==='water'?10:4});
+    const apron=new THREE.Mesh(new THREE.PlaneGeometry(220,180),apMat);
+    apron.rotation.x=-Math.PI/2; apron.position.set(160,.04,900); apron.receiveShadow=q!=='low'; grp.add(apron);
+    const tx=new THREE.Mesh(new THREE.PlaneGeometry(120,24),apMat);
+    tx.rotation.x=-Math.PI/2; tx.position.set(75,.045,900); grp.add(tx);
+    const hang=_mesh(new THREE.BoxGeometry(60,14,42),MAT(0xbfc4ca)); hang.position.set(210,7,860);
+    const roofG=new THREE.CylinderGeometry(21,21,60,16,1,false,0,Math.PI); roofG.rotateZ(Math.PI/2);
+    const roof=_mesh(roofG,MAT(0xff8c2a)); roof.position.set(210,14,860);
+    const door=_mesh(new THREE.BoxGeometry(50,11,1),MAT(0x2a2e34)); door.position.set(210,5.5,838.6);
+    const tower=_mesh(new THREE.BoxGeometry(10,26,10),MAT(0xd9dee5)); tower.position.set(150,13,960);
+    const cab=_mesh(new THREE.BoxGeometry(15,6,15),MAT(0x3a76a8)); cab.position.set(150,29,960);
+    const cap=_mesh(new THREE.ConeGeometry(9,4,4),MAT(0xff8c2a)); cap.position.set(150,34,960); cap.rotation.y=.78;
+    const sock=_mesh(new THREE.ConeGeometry(1.4,6,8),MAT(0xff8c2a)); sock.rotation.z=Math.PI/2;
+    sock.position.set(60,10,760);
+    const pole=_mesh(new THREE.CylinderGeometry(.2,.3,10,6),MAT(0x9aa2ad)); pole.position.set(60,5,760);
+    grp.add(hang,roof,door,tower,cab,cap,sock,pole);
+    if(ap.type==='water'){
+      const lakeR=ap.flatR+ap.rampR*.6;
+      const water=new THREE.Mesh(new THREE.CircleGeometry(lakeR,40),new THREE.MeshPhongMaterial(
+        {color:0x2f6f9e,transparent:true,opacity:.82,shininess:90,specular:0xdff2ff}));
+      water.rotation.x=-Math.PI/2; water.position.y=-.4; water.userData.noCast=true; grp.add(water);
+      // wooden piers instead of a plain grey apron
+      apMat.color.set(0x8a6f4c);
+    }
+    if(ap.type==='mountain'){
+      const snow=new THREE.Mesh(new THREE.RingGeometry(ap.flatR*.9,ap.flatR,36),
+        new THREE.MeshPhongMaterial({color:0xeef3f7,transparent:true,opacity:.5,depthWrite:false}));
+      snow.rotation.x=-Math.PI/2; snow.position.y=.02; snow.userData.noCast=true; grp.add(snow);
+    }
+    const label=this.makeLabelSprite(ap.name); label.position.set(150,42,960); label.scale.set(150,37.5,1);
+    grp.add(label);
+    grp.traverse(o=>{ if(o.isMesh){o.castShadow=q!=='low'&&!o.userData.noCast; o.receiveShadow=true;} });
+    sc.add(grp); return grp;
   },
 };
 
@@ -1692,7 +1814,7 @@ const MENUBG={
 const FL = {
   active:false, craft:null, info:null, parts:[], spinners:[], glows:[], lamps:[],
   gearAnims:[], bayDoors:[], contacts:[], steerIdx:-1,
-  ph:null, inp:{pitch:0,roll:0,yaw:0}, camMode:0, camZoom:1,
+  ph:null, inp:{pitch:0,roll:0,yaw:0}, camMode:0, camZoom:1, freeLook:false,
   orb:{yaw:.6,pitch:.25}, cinePos:new THREE.Vector3(), stallT:0, msgT:0,
   cam:new THREE.PerspectiveCamera(62,innerWidth/innerHeight,.3,70000),
   _mm:0,
@@ -1747,7 +1869,7 @@ const FL = {
     WPN.init(this); RP.reset(); FX.clear(); AU.init();
     craft.position.copy(this.ph.pos); craft.quaternion.copy(this.ph.quat);
     this.cam.position.copy(this.ph.pos).add(new THREE.Vector3(0,4,18));
-    this.msg('N — start engines · SHIFT/CTRL throttle · SPACE afterburner',5);
+    this.msg('N — Triebwerke starten · SHIFT/STRG Schub · LEERTASTE Nachbrenner',5);
     this.hud(0);
   },
   dispose(){ if(this.craft){ W.scene.remove(this.craft); this.craft=null; } this.active=false; },
@@ -1755,17 +1877,17 @@ const FL = {
   msg(t,secs=3){ $('flt-msg').textContent=t; $('flt-msg').classList.remove('hidden'); this.msgT=secs; },
 
   toggleEngines(){ const ph=this.ph;
-    if(!this.info.engines.length){ this.msg('No engines fitted!'); return; }
+    if(!this.info.engines.length){ this.msg('Keine Triebwerke verbaut!'); return; }
     ph.engOn=!ph.engOn;
     if(ph.engOn){ if(ph.energy<=0&&!this.info.engines.some(e=>e.gen>=e.kW)){
-        ph.engOn=false; this.msg('Battery empty — no power to start'); return; }
-      ph.thrTgt=Math.max(ph.thrTgt,.75); this.msg('Engines ON'); }
-    else{ this.msg('Engines OFF'); } },
+        ph.engOn=false; this.msg('Batterie leer — keine Energie zum Starten'); return; }
+      ph.thrTgt=Math.max(ph.thrTgt,.75); this.msg('Triebwerke AN'); }
+    else{ this.msg('Triebwerke AUS'); } },
   toggleGear(){ const ph=this.ph;
-    if(!this.gearAnims.length){ this.msg('No retractable gear'); return; }
+    if(!this.gearAnims.length){ this.msg('Kein einziehbares Fahrwerk'); return; }
     ph.gearDown=!ph.gearDown; AU.gearClunk(); },
   toggleBay(){ const ph=this.ph; if(!this.bayDoors.length){ return; }
-    ph.bayOpen=!ph.bayOpen; AU.gearClunk(); this.msg('Bay doors '+(ph.bayOpen?'OPEN':'CLOSED'),1.6); },
+    ph.bayOpen=!ph.bayOpen; AU.gearClunk(); this.msg('Schachtklappen '+(ph.bayOpen?'OFFEN':'GESCHLOSSEN'),1.6); },
 
   step(dt){
     const ph=this.ph;
@@ -1776,8 +1898,8 @@ const FL = {
       // ---- read + smooth inputs ----
       const k=KEY, sm=(c,t)=>U.expDamp(c,t,9,dt);
       this.inp.pitch=sm(this.inp.pitch,(k.KeyW?-1:0)+(k.KeyS?1:0));
-      this.inp.roll =sm(this.inp.roll ,(k.KeyA?1:0)+(k.KeyD?-1:0));
-      this.inp.yaw  =sm(this.inp.yaw  ,(k.KeyQ?1:0)+(k.KeyE?-1:0));
+      this.inp.roll =sm(this.inp.roll ,(k.KeyQ?1:0)+(k.KeyE?-1:0)); // Q = roll left, E = roll right
+      this.inp.yaw  =sm(this.inp.yaw  ,(k.KeyA?1:0)+(k.KeyD?-1:0)); // A/D = yaw (also steers on the ground)
       if(k.ShiftLeft||k.ShiftRight) ph.thrTgt=U.clamp(ph.thrTgt+dt*.55,0,1);
       if(k.ControlLeft||k.ControlRight) ph.thrTgt=U.clamp(ph.thrTgt-dt*.55,0,1);
       ph.ab=!!k.Space;
@@ -1894,7 +2016,7 @@ const FL = {
       if(c.gear&&c.retract&&!ph.gearDown) continue;
       const rW=_v4.copy(c.local).applyQuaternion(q);
       const px=ph.pos.x+rW.x, py=ph.pos.y+rW.y, pz=ph.pos.z+rW.z;
-      let gy2=terrainH(px,pz); if(Math.abs(px)<40&&Math.abs(pz)<1530) gy2=.06;
+      let gy2=terrainH(px,pz); const apAt=airportPadAt(px,pz); if(apAt) gy2=apAt.baseH+.06;
       const pen=gy2-(py-c.r);
       if(pen<=0) continue;
       const omW=_v3.copy(ph.om).applyQuaternion(q);
@@ -1902,8 +2024,11 @@ const FL = {
       // crash check
       if(ph.pos.y<gy2+this.bbR+60){
         const vImp=-vpt.y, vTot=vpt.length();
+        if(!c.gear&&this.gearAnims.length>0&&!ph.gearDown){ this.crash(); return; } // belly touches ground with gear retracted → always fatal
         if((!c.gear&&(vImp>CFG.CRASH_V*.6||vTot>CFG.CRASH_TOTAL*.8))||
            (c.gear&&vImp>CFG.CRASH_V*1.35)){ this.crash(); return; }
+        if(c.gear&&!ph.grounded&&vImp>1.2&&vImp<=CFG.CRASH_V*1.35&&!this._landedMsg){
+          this._landedMsg=true; this.msg('Sanfte Landung!',2.2); }
         if(!c.gear&&vTot>5) AU.scrape(vTot); }
       let Fn=kSpring*pen-Math.sqrt(kSpring*M)*.9*vpt.y/Math.max(1,gearContacts||4);
       Fn=Math.max(0,Math.min(Fn,M*CFG.GRAV*4));
@@ -1928,6 +2053,7 @@ const FL = {
       T.add(_v2.copy(rB).cross(FB));
       if(c.gear) onGround=true;
     }
+    if(!onGround) this._landedMsg=false;
     ph.grounded=onGround;
     if(onGround&&speed>1){ // direct nosewheel steering feel
       const steer=((KEY.KeyA?1:0)-(KEY.KeyD?1:0));
@@ -1939,14 +2065,14 @@ const FL = {
         gen+=e.gen*U.clamp(ph.thr*3,0,1); }
       gen*=1+.05*info.flags.relay;
       ph.energy=U.clamp(ph.energy+(gen-draw)*h,0,Math.max(info.batKJ,1));
-      if(ph.energy<=0&&draw>gen&&!this._pwrWarned){ this._pwrWarned=true; this.msg('BATTERY EMPTY — power lost'); }
+      if(ph.energy<=0&&draw>gen&&!this._pwrWarned){ this._pwrWarned=true; this.msg('BATTERIE LEER — Energie verloren'); }
       if(ph.energy>0) this._pwrWarned=false;
     }
     // ---- world limits ----
     if(ph.pos.y>CFG.ALT_MAX) ph.vel.y-=(ph.pos.y-CFG.ALT_MAX)*.004*h*60;
     const lim=CFG.WORLD_HALF-200;
-    if(Math.abs(ph.pos.x)>lim){ ph.pos.x=U.clamp(ph.pos.x,-lim,lim); ph.vel.x*=-.2; this.msg('World edge!',2); }
-    if(Math.abs(ph.pos.z)>lim){ ph.pos.z=U.clamp(ph.pos.z,-lim,lim); ph.vel.z*=-.2; this.msg('World edge!',2); }
+    if(Math.abs(ph.pos.x)>lim){ ph.pos.x=U.clamp(ph.pos.x,-lim,lim); ph.vel.x*=-.2; this.msg('Weltrand!',2); }
+    if(Math.abs(ph.pos.z)>lim){ ph.pos.z=U.clamp(ph.pos.z,-lim,lim); ph.vel.z*=-.2; this.msg('Weltrand!',2); }
     // ---- integrate ----
     ph.vel.addScaledVector(F,h/M);
     ph.pos.addScaledVector(ph.vel,h);
@@ -1973,10 +2099,18 @@ const FL = {
 
   /* ---------- cameras ---------- */
   cycleCam(){ this.camMode=(this.camMode+1)%4;
-    this.msg(['CHASE CAM','NOSE CAM','ORBIT CAM','CINEMATIC CAM'][this.camMode],1.4); },
+    this.msg(['VERFOLGERKAMERA','BUGKAMERA','ORBITKAMERA','KINOKAMERA'][this.camMode],1.4); },
   camera(dt){
     const ph=this.ph, cam=this.cam, R=this.bbR;
     const fwd=_v1.set(0,0,-1).applyQuaternion(ph.quat);
+    if(this.freeLook){ // middle-mouse held: free 360° orbit regardless of camera mode
+      const o=this.orb, d=(R*3+9)*this.camZoom;
+      cam.position.set(ph.pos.x+Math.sin(o.yaw)*Math.cos(o.pitch)*d,
+        ph.pos.y+Math.sin(o.pitch)*d, ph.pos.z+Math.cos(o.yaw)*Math.cos(o.pitch)*d);
+      const gh=terrainH(cam.position.x,cam.position.z)+.8;
+      if(cam.position.y<gh) cam.position.y=gh;
+      cam.lookAt(ph.pos); return;
+    }
     if(this.camMode===0){ // chase
       const d=(R*2.4+7)*this.camZoom;
       const tgt=_v2.copy(ph.pos).addScaledVector(fwd,-d).add(_v3.set(0,d*.34,0));
@@ -2005,7 +2139,9 @@ const FL = {
   },
   onMouse(e,type){
     if(type==='wheel'){ this.camZoom=U.clamp(this.camZoom*(e.deltaY>0?1.1:.91),.45,3.2); return; }
-    if(type==='move'&&e.buttons===1&&this.camMode===2){
+    if(type==='down'&&e.button===1){ this.freeLook=true; return; }
+    if(type==='up'&&e.button===1){ this.freeLook=false; return; }
+    if(type==='move'&&(this.freeLook||(e.buttons===1&&this.camMode===2))){
       this.orb.yaw-=e.movementX*.006; this.orb.pitch=U.clamp(this.orb.pitch+e.movementY*.005,-1.2,1.45); }
   },
 
@@ -2018,7 +2154,7 @@ const FL = {
     let hdg=Math.atan2(fwd.x,-fwd.z)*U.R2D; if(hdg<0)hdg+=360;
     $('hud-hdg').textContent=String(Math.round(hdg)%360).padStart(3,'0');
     const engT=$('hud-eng');
-    engT.textContent=ph.crashed?'DESTROYED':!ph.engOn?'OFF':(ph.energy<=0&&this.info.batKJ>=0&&!this.info.engines.some(e=>e.gen>=e.kW))?'NO PWR':(ph.ab?'AB ⚡':'ON');
+    engT.textContent=ph.crashed?'ZERSTÖRT':!ph.engOn?'AUS':(ph.energy<=0&&this.info.batKJ>=0&&!this.info.engines.some(e=>e.gen>=e.kW))?'KEIN STROM':(ph.ab?'AB ⚡':'AN');
     $('hud-thrv').textContent=U.fmt(ph.thr*100)+'%';
     $('hud-thr').style.width=(ph.thr*100)+'%';
     const bp=this.info.batKJ>0? ph.energy/this.info.batKJ:0;
@@ -2026,7 +2162,7 @@ const FL = {
     $('hud-bat').style.width=(bp*100)+'%';
     $('hud-batbar').className='bar'+(bp<.15?' crit':bp<.4?' warn':'');
     const gAnim=this.gearAnims.length&&this.gearAnims[0].t>0&&this.gearAnims[0].t<1;
-    $('hud-gear').textContent=!this.gearAnims.length?'FIXED':gAnim?'···':(ph.gearDown?'DOWN':'UP');
+    $('hud-gear').textContent=!this.gearAnims.length?'FEST':gAnim?'···':(ph.gearDown?'UNTEN':'OBEN');
     $('hud-coords').textContent='X '+U.fmt(ph.pos.x)+' · Y '+U.fmt(ph.pos.y)+' · Z '+U.fmt(ph.pos.z);
     $('stall-warn').classList.toggle('hidden',!this.stalled||ph.crashed);
     $('wpn-name').textContent=WPN.label(); $('wpn-ammo').textContent=WPN.ammoLabel();
@@ -2063,11 +2199,12 @@ const FL = {
     for(const r of [2000,4000]){ g.beginPath(); g.arc(c,c,r*k,0,7); g.stroke(); }
     const px=ph.pos.x, pz=ph.pos.z;
     const X=x=>c+(x-px)*k, Z=z=>c+(z-pz)*k;
-    g.fillStyle='#8fe0a2';                                          // runway
-    g.fillRect(X(-CFG.RUNWAY_W/2),Z(-CFG.RUNWAY_L/2),CFG.RUNWAY_W*k,CFG.RUNWAY_L*k);
-    g.fillStyle='#ffd257'; g.fillRect(X(150)-2,Z(900)-2,4,4);       // hangar
-    const dO=Math.hypot(px,pz);
-    if(dO>range*.92){ const a=Math.atan2(-px,-pz);                  // arrow to airfield
+    let nearest=AIRPORTS[0], nd=Infinity;
+    for(const ap2 of AIRPORTS){ const d=Math.hypot(ap2.x-px,ap2.z-pz); if(d<nd){nd=d;nearest=ap2;}
+      if(d<range*1.3){ const col=ap2.type==='water'?'#5ec8ff':ap2.type==='mountain'?'#e8c37a':'#8fe0a2';
+        g.save(); g.translate(X(ap2.x),Z(ap2.z)); g.rotate(ap2.heading);
+        g.fillStyle=col; g.fillRect(-CFG.RUNWAY_W/2*k,-CFG.RUNWAY_L/2*k,CFG.RUNWAY_W*k,CFG.RUNWAY_L*k); g.restore(); } }
+    if(nd>range*.92){ const a=Math.atan2(nearest.x-px,-(nearest.z-pz)); // arrow to nearest airport
       g.save(); g.translate(c,c); g.rotate(a); g.fillStyle='#ffd257';
       g.beginPath(); g.moveTo(0,-(c-10)); g.lineTo(-5,-(c-20)); g.lineTo(5,-(c-20)); g.fill(); g.restore(); }
     const fwd=_v1.set(0,0,-1).applyQuaternion(ph.quat), a=Math.atan2(fwd.x,-fwd.z);
@@ -2087,14 +2224,17 @@ const FL = {
     g.strokeStyle='rgba(185,246,198,.35)'; g.strokeRect(1,1,s-2,s-2);
     g.strokeStyle='rgba(160,160,150,.35)'; g.beginPath(); g.arc(s/2,s/2,20000*k,0,7); g.stroke(); // mountains
     const X=x=>(x+half)*k, Z=z=>(z+half)*k;
-    g.fillStyle='#8fe0a2'; g.fillRect(X(0)-3,Z(0)-Math.max(3,1500*k),6,Math.max(6,3000*k));
-    g.fillStyle='rgba(185,246,198,.85)'; g.font='11px monospace';
-    g.fillText('AIRFIELD',X(0)+8,Z(0));
+    g.textAlign='left';
+    for(const ap2 of AIRPORTS){ const px2=X(ap2.x), pz2=Z(ap2.z),
+        col=ap2.type==='water'?'#5ec8ff':ap2.type==='mountain'?'#e8c37a':'#8fe0a2';
+      g.save(); g.translate(px2,pz2); g.rotate(ap2.heading);
+      g.fillStyle=col; g.fillRect(-3,-Math.max(3,1500*k),6,Math.max(6,3000*k)); g.restore();
+      g.fillStyle='rgba(255,255,255,.92)'; g.font='11px monospace'; g.fillText(ap2.name,px2+9,pz2); }
     const fwd=_v1.set(0,0,-1).applyQuaternion(ph.quat), a=Math.atan2(fwd.x,-fwd.z);
     g.save(); g.translate(X(ph.pos.x),Z(ph.pos.z)); g.rotate(a); g.fillStyle='#ffd257';
     g.beginPath(); g.moveTo(0,-9); g.lineTo(-6,8); g.lineTo(0,4); g.lineTo(6,8); g.fill(); g.restore();
     g.fillStyle='rgba(185,246,198,.8)';
-    g.fillText('X '+U.fmt(ph.pos.x)+'  Z '+U.fmt(ph.pos.z)+'  ALT '+U.fmt(ph.pos.y)+'m',12,s-14);
+    g.fillText('X '+U.fmt(ph.pos.x)+'  Z '+U.fmt(ph.pos.z)+'  HÖHE '+U.fmt(ph.pos.y)+'m',12,s-14);
     g.fillText('50 × 50 km',12,20);
   },
 };
@@ -2103,8 +2243,8 @@ const FL = {
    §11  WEAPONS — selection, firing, ordnance release
    ============================================================ */
 const WPN_ORDER=['minigun','cannon','rocket','msl','guided','bomb','cluster','torpedo','nuke'];
-const WPN_NAMES={minigun:'MINIGUN',cannon:'CANNON',rocket:'ROCKETS',msl:'MISSILES',
-  guided:'GUIDED MSL',bomb:'BOMB',cluster:'CLUSTER BOMB',torpedo:'TORPEDO',nuke:'☢ NUKE ☢'};
+const WPN_NAMES={minigun:'MINIGUN',cannon:'KANONE',rocket:'RAKETEN',msl:'FLUGKÖRPER',
+  guided:'LENKRAKETE',bomb:'BOMBE',cluster:'STREUBOMBE',torpedo:'TORPEDO',nuke:'☢ ATOMBOMBE ☢'};
 const WPN = {
   groups:[], sel:0, fl:null,
   init(fl){ this.fl=fl; this.groups=[]; this.sel=0;
@@ -2117,20 +2257,20 @@ const WPN = {
   cur(){ return this.groups[this.sel]||null; },
   cycle(d=1){ if(!this.groups.length) return;
     this.sel=(this.sel+d+this.groups.length)%this.groups.length;
-    AU.click(); this.fl.msg('WEAPON: '+WPN_NAMES[this.cur().type],1.2); },
-  select(i){ if(i<this.groups.length){ this.sel=i; this.fl.msg('WEAPON: '+WPN_NAMES[this.cur().type],1.2); } },
-  label(){ const g=this.cur(); return g? WPN_NAMES[g.type] : 'NO WEAPONS'; },
-  ammoLabel(){ const g=this.cur(); return g? (g.ammo>0? g.ammo+' rnd':'EMPTY') : '—'; },
+    AU.click(); this.fl.msg('WAFFE: '+WPN_NAMES[this.cur().type],1.2); },
+  select(i){ if(i<this.groups.length){ this.sel=i; this.fl.msg('WAFFE: '+WPN_NAMES[this.cur().type],1.2); } },
+  label(){ const g=this.cur(); return g? WPN_NAMES[g.type] : 'KEINE WAFFEN'; },
+  ammoLabel(){ const g=this.cur(); return g? (g.ammo>0? g.ammo+' Stk':'LEER') : '—'; },
   update(dt){ for(const g of this.groups) g.cd=Math.max(0,g.cd-dt); },
   muzzleWorld(m,out){ if(m.g) return m.g.getWorldPosition(out);
     return out.copy(m.local).applyQuaternion(this.fl.ph.quat).add(this.fl.ph.pos); },
   fire(dt,held){
     const fl=this.fl, g=this.cur(); if(!g||fl.ph.crashed) return;
     if(g.cd>0) return;
-    if(g.ammo<=0){ g.cd=.5; fl.msg(WPN_NAMES[g.type]+' — OUT OF AMMO',1); return; }
+    if(g.ammo<=0){ g.cd=.5; fl.msg(WPN_NAMES[g.type]+' — KEINE MUNITION',1); return; }
     const bombTypes=['bomb','cluster','nuke'];
     if(bombTypes.includes(g.type)&&fl.bayDoors.length&&!fl.ph.bayOpen){
-      g.cd=.5; fl.msg('BAY DOORS CLOSED — PRESS G',1.4); return; }
+      g.cd=.5; fl.msg('SCHACHTKLAPPEN GESCHLOSSEN — G DRÜCKEN',1.4); return; }
     g.cd=g.rate;
     const q=fl.ph.quat, fwd=_v1.set(0,0,-1).applyQuaternion(q).clone(), vel=fl.ph.vel;
     const m=g.mounts[g.mi%g.mounts.length]; g.mi++;
@@ -2357,7 +2497,7 @@ const RP = {
   canPlay(){ return this.frames.length>15; },
   dur(){ return this.frames.length? this.frames[this.frames.length-1].t-this.frames[0].t : 0; },
   start(){
-    if(!this.canPlay()){ toast('Not enough flight recorded yet','warn'); return; }
+    if(!this.canPlay()){ toast('Noch nicht genug Flug aufgezeichnet','warn'); return; }
     S.mode='replay'; S.overlay=null;
     ['pause','hud','crash-banner'].forEach(id=>$(id).classList.add('hidden'));
     $('replay-ui').classList.remove('hidden');
@@ -2451,7 +2591,7 @@ const ROUTER = {
     S.overlay=null;
   },
   openPause(){
-    $('pause-title').textContent=FL.ph&&FL.ph.crashed?'Crashed':'Paused';
+    $('pause-title').textContent=FL.ph&&FL.ph.crashed?'Abgestürzt':'Pausiert';
     $('p-resume').style.display=FL.ph&&FL.ph.crashed?'none':'';
     $('p-replay').disabled=!RP.canPlay();
     this.openOverlay('pause');
@@ -2461,6 +2601,7 @@ const ROUTER = {
     // modal dialogs first
     if(S.overlay==='save'){ if(c==='Escape')HANGAR.closeSave(); if(c==='Enter')$('save-ok').click(); return; }
     if(S.overlay==='load'){ if(c==='Escape')HANGAR.closeLoad(); return; }
+    if(S.overlay==='quit-confirm'){ if(c==='Escape')$('quit-confirm-no').click(); if(c==='Enter')$('quit-confirm-yes').click(); return; }
     if(S.mode==='menu'){
       if(c==='Escape'&&S.overlay){ this.closeOverlay(); } return; }
     if(S.mode==='editor'){
@@ -2497,17 +2638,19 @@ const ROUTER = {
    ============================================================ */
 function buildControls(){
   const rows=[
-    ['FLIGHT'],['N','Start / stop all engines'],['Shift / Ctrl','Throttle up / down'],
-    ['W / S','Pitch down / pitch up (S = airbrake in air)'],['A / D','Roll left / right (steer on ground)'],
-    ['Q / E','Yaw left / right'],['Space','Afterburner / maximum thrust'],['R','Landing gear up / down'],
-    ['GROUND'],['W','Accelerate on runway'],['S','Wheel brake + thrust reversers'],
-    ['WEAPONS'],['F','Fire selected weapon'],['Tab / 1–9','Cycle / select weapon'],['G','Bomb bay doors'],
-    ['CAMERA & MAP'],['C','Camera: chase · nose · orbit · cinematic'],['Mouse wheel','Zoom camera'],
-    ['Drag (orbit cam)','Look around'],['M','Full-screen map'],['Esc','Pause / close'],
-    ['EDITOR'],['LMB click','Place part / select part'],['LMB drag','Orbit camera (drag selected part to move it)'],
-    ['Shift + drag part','Move part vertically'],['RMB drag','Pan camera'],['Scroll','Zoom'],
-    ['X / Y / Z + drag','Rotate selected part around axis (5° steps)'],['R','Rotate ghost 90°'],
-    ['S','Toggle mirror symmetry'],['Ctrl+Z / Ctrl+D','Undo / duplicate'],['Del','Delete selected part'],
+    ['FLUG'],['N','Alle Triebwerke starten / stoppen'],['Shift / Strg','Schub erhöhen / verringern'],
+    ['W / S','Sinken / Steigen (S = Luftbremse in der Luft)'],['Q / E','Rollen links / rechts (um die Längsachse)'],
+    ['A / D','Gieren links / rechts (auch Lenkung am Boden)'],['Leertaste','Nachbrenner / Volllast'],['R','Fahrwerk ein- / ausfahren'],
+    ['AM BODEN'],['W','Auf der Landebahn beschleunigen'],['S','Radbremse + Schubumkehr'],
+    ['LANDUNG'],['Fahrwerk unten + langsam','Sanfte Landung möglich'],['Fahrwerk oben','Absturz bei Bodenberührung'],
+    ['WAFFEN'],['F','Ausgewählte Waffe abfeuern'],['Tab / 1–9','Waffe wechseln / auswählen'],['G','Bombenschachtklappen'],
+    ['KAMERA & KARTE'],['C','Kamera: Verfolger · Bug · Orbit · Kino'],['Mausrad','Kamera zoomen'],
+    ['Mausrad gedrückt halten','Freie 360° Kamerarotation um das Flugzeug'],
+    ['Ziehen (Orbitkamera)','Umsehen'],['M','Vollbildkarte'],['Esc','Pause / schließen'],
+    ['EDITOR'],['LMT Klick','Teil platzieren / auswählen'],['LMT ziehen','Kamera drehen (ausgewähltes Teil ziehen zum Verschieben)'],
+    ['Shift + Teil ziehen','Teil vertikal verschieben'],['RMT ziehen','Kamera verschieben'],['Scrollen','Zoomen'],
+    ['X / Y / Z + ziehen','Ausgewähltes Teil um Achse drehen (5°-Schritte)'],['R','Geisterteil 90° drehen'],
+    ['S','Spiegelsymmetrie umschalten'],['Strg+Z / Strg+D','Rückgängig / duplizieren'],['Entf','Ausgewähltes Teil löschen'],
   ];
   $('ctl-body').innerHTML=rows.map(r=>r.length===1
     ? '<tr class="sect"><td colspan="2">'+r[0]+'</td></tr>'
@@ -2527,10 +2670,12 @@ function applyGfx(){
     W.build(); if(FL.craft) W.scene.add(FL.craft); if(RP.ghost) W.scene.add(RP.ghost); FX.attach(W.scene); }
 }
 function wireMenus(){
-  $('mm-new').onclick=()=>{ AU.init(); AU.click(); S.design=newDesign('My New Plane'); ROUTER.go('editor'); };
+  $('mm-new').onclick=()=>{ AU.init(); AU.click(); S.design=newDesign('Mein neues Flugzeug'); ROUTER.go('editor'); };
   $('mm-load').onclick=()=>{ AU.init(); AU.click(); HANGAR.openLoad('menu'); };
   $('mm-settings').onclick=()=>{ AU.init(); AU.click(); ROUTER.openOverlay('settings','menu'); };
-  $('mm-quit').onclick=()=>{ AU.click(); ROUTER.openOverlay('quit','menu'); };
+  $('mm-quit').onclick=()=>{ AU.click(); S.overlay='quit-confirm'; $('dlg-quit-confirm').classList.remove('hidden'); };
+  $('quit-confirm-yes').onclick=()=>{ AU.click(); $('dlg-quit-confirm').classList.add('hidden'); ROUTER.openOverlay('quit','menu'); };
+  $('quit-confirm-no').onclick=()=>{ AU.click(); S.overlay=null; $('dlg-quit-confirm').classList.add('hidden'); };
   $('quit-back').onclick=()=>{ AU.click(); ROUTER.closeOverlay(); };
   // settings
   const vol=(slider,label,key)=>{ const el=$(slider);
@@ -2542,7 +2687,7 @@ function wireMenus(){
   vol('set-wind','v-wind','wind'); vol('set-weapon','v-weapon','weapon');
   $('set-gfx').value=SET.gfx;
   $('set-gfx').addEventListener('change',()=>{ SET.gfx=$('set-gfx').value; saveSET(); applyGfx();
-    toast('Graphics: '+SET.gfx.toUpperCase()); });
+    toast('Grafik: '+({low:'NIEDRIG',med:'MITTEL',high:'HOCH'}[SET.gfx])); });
   $('set-back').onclick=()=>{ AU.click(); ROUTER.closeOverlay();
     if(ROUTER.ovFrom==='pause'&&S.mode==='flight') ROUTER.openPause(); };
   // pause
@@ -2562,7 +2707,8 @@ function wireCanvas(){
   const dispatch=(e,type)=>{ if(S.overlay) return;
     if(S.mode==='editor') ED.onMouse(e,type);
     else if(S.mode==='flight'||S.mode==='replay') FL.onMouse(e,type); };
-  cv.addEventListener('mousedown',e=>dispatch(e,'down'));
+  cv.addEventListener('mousedown',e=>{ if(e.button===1) e.preventDefault(); dispatch(e,'down'); });
+  cv.addEventListener('auxclick',e=>{ if(e.button===1) e.preventDefault(); });
   window.addEventListener('mousemove',e=>dispatch(e,'move'));
   window.addEventListener('mouseup',e=>dispatch(e,'up'));
   cv.addEventListener('wheel',e=>{ e.preventDefault(); dispatch(e,'wheel'); },{passive:false});
@@ -2588,7 +2734,7 @@ function LOOP(){
 /* ---------- boot ---------- */
 function BOOT(){
   if(!window.THREE){
-    $('boot').innerHTML='⚠ Could not load the 3D engine.<br>An internet connection is needed the first time<br>(Three.js loads from a CDN). Reload to retry.';
+    $('boot').innerHTML='⚠ 3D-Engine konnte nicht geladen werden.<br>Beim ersten Start wird eine Internetverbindung benötigt<br>(Three.js lädt von einem CDN). Zum erneuten Versuch neu laden.';
     return; }
   loadSET();
   renderer=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true});
@@ -2596,7 +2742,7 @@ function BOOT(){
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   ED.init(); MENUBG.init(); HANGAR.wire(); RP.wire(); buildControls(); wireMenus(); wireCanvas();
   applyGfx(); window.addEventListener('resize',onResize);
-  if(!STORE.persistent) setTimeout(()=>toast('Storage is blocked here — saves last for this session only','warn'),1200);
+  if(!STORE.persistent) setTimeout(()=>toast('Speicher ist hier blockiert — Speicherstände gelten nur für diese Sitzung','warn'),1200);
   ROUTER.go('menu');
   $('boot').remove();
   LOOP();
