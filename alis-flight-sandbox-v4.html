@@ -580,16 +580,19 @@ const AU = {
   buildEngines(){
     const c=this.ctx, out=this.buses.engine, E={};
     // PROP / TURBOPROP — detuned saws + blade-chop LFO
-    {const g=c.createGain(); g.gain.value=0; g.connect(out);
-     const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=600; lp.connect(g);
+    {const g=c.createGain(); g.gain.value=0; g.connect(out);        // OUTPUT gain — engineSet ramps this (0 at idle → truly silent)
+     const chop=c.createGain(); chop.gain.value=.6; chop.connect(g); // blade-chop lives IN the signal path, before g
+     const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=470; lp.connect(chop);
      const o1=c.createOscillator(),o2=c.createOscillator();
      o1.type='sawtooth';o2.type='sawtooth';o1.frequency.value=62;o2.frequency.value=63.7;
      o1.connect(lp);o2.connect(lp);o1.start();o2.start();
-     // NOTE: the old blade-chop LFO was wired straight onto g.gain as a ±0.35 offset.
-     // Because g.gain's base value is 0 until a flight frame ramps it, that offset made the
-     // 62 Hz saw leak through at idle → a shrill continuous buzz the instant AU.init() ran
-     // (i.e. on the very first keypress). Removed entirely; all other SFX are untouched.
-     E.prop={g,lp,o1,o2};}
+     // Blade-chop LFO now modulates chop.gain (base .6 ± .4), NOT the output gain g.
+     // g is 0 whenever the engine is off, so nothing leaks at idle — this was the old
+     // "shrill continuous buzz on first keypress" bug. A gentler 470 Hz low-pass + lower
+     // level also stops the prop being a harsh flat drone while running.
+     const lfo=c.createOscillator(),lg=c.createGain(); lfo.type='sine'; lfo.frequency.value=20;
+     lg.gain.value=.4; lfo.connect(lg); lg.connect(chop.gain); lfo.start();
+     E.prop={g,lp,o1,o2,lfo,chop};}
     // JET — bandpassed noise rumble + sine turbine whine
     {const g=c.createGain(); g.gain.value=0; g.connect(out);
      const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=900; bp.Q.value=.7; bp.connect(g);
@@ -612,13 +615,13 @@ const AU = {
     if(!this.engines) return; const E=this.engines, t=this.ctx.currentTime, R=running?1:0;
     const ramp=(p,v)=>{ p.cancelScheduledValues(t); p.setTargetAtTime(v,t,.06); };
     const propN=(mix.prop||0)+(mix.turbo||0)*1.2;
-    ramp(E.prop.g.gain, R*propN?U.clamp(.05+thr*.28,0,.5)*Math.min(1,propN/2+.5):0);
+    ramp(E.prop.g.gain, R*propN?U.clamp(.03+thr*.17,0,.32)*Math.min(1,propN/2+.5):0); // quieter than before
     const pf=55+thr*95; ramp(E.prop.o1.frequency,pf); ramp(E.prop.o2.frequency,pf*1.026);
-    ramp(E.prop.lp.frequency,420+thr*1500);
+    ramp(E.prop.lp.frequency,360+thr*1200); ramp(E.prop.lfo.frequency,14+thr*26);      // blade-chop speed
     const jetN=(mix.jet||0)+(mix.turbo||0)*.4;
-    ramp(E.jet.g.gain, R*jetN?U.clamp(.04+thr*.34,0,.55)*Math.min(1,jetN/2+.5):0);
+    ramp(E.jet.g.gain, R*jetN?U.clamp(.03+thr*.24,0,.4)*Math.min(1,jetN/2+.5):0);       // quieter jet rumble
     ramp(E.jet.bp.frequency,650+thr*2100);
-    ramp(E.jet.wg.gain, R*jetN?(.015+thr*.05):0); ramp(E.jet.w.frequency,1200+thr*4200);
+    ramp(E.jet.wg.gain, R*jetN?(.008+thr*.03):0); ramp(E.jet.w.frequency,1100+thr*2600);// tamed, less shrill whine
     ramp(E.ab.g.gain,(R&&ab&&jetN)?.5:0);
     const rk=mix.rocket||0;
     ramp(E.rocket.g.gain, R*rk? U.clamp(.25+thr*.5,0,.8):0);
@@ -2629,9 +2632,11 @@ const FL = {
           if(!ph.grounded){ if(vImp>CFG.CRASH_V*.6||vTot>CFG.CRASH_TOTAL*.8){ this.crash(); return; } } // airborne belly impact
           else if(vImp>CFG.CRASH_V){ this.crash(); return; }                   // grounded: only a hard vertical belly slam is fatal (a rolling graze is not)
         } else if(!ph.grounded){                                              // gear contact only fires when gear is down/deployed
-          const tooFast=speed>50;            // 50 m/s ≈ 180 km/h
-          const tooSteep=descentDeg>10 || vImp>CFG.CRASH_V*1.5;
-          if(tooFast||tooSteep){ this.crash(); return; }
+          if(vTot>4){                        // ignore feather-light settles (e.g. spawning to rest on the runway)
+            const tooFast=speed>50;          // 50 m/s ≈ 180 km/h
+            const tooSteep=descentDeg>10 || vImp>CFG.CRASH_V*1.5;
+            if(tooFast||tooSteep){ this.crash(); return; }
+          }
           if(vImp>0.8&&!this._landedMsg){ this._landedMsg=true; this.msg('Sanfte Landung!',2.2); }
         }
         if(!c.gear&&vTot>5) AU.scrape(vTot); }
